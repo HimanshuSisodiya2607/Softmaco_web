@@ -194,73 +194,361 @@
     </section>
 
 
-    <!-- ── SERVICES ── -->
+
+    <!-- ── SERVICES: INTERACTIVE TECHNOLOGY ORBIT ── -->
     <section id="services">
       <div class="wrap">
-        <div class="section-head center reveal" style="max-width:580px;margin:0 auto 48px;">
+        <div class="section-head center reveal" style="max-width:620px;margin:0 auto 40px;">
           <div class="eyebrow center">WHAT WE BUILD</div>
-          <h2 style="font-size:clamp(26px,3.4vw,38px);margin-top:14px;">Everything you need, one team.</h2>
+          <h2 style="font-size:clamp(28px,3.6vw,42px);margin-top:14px;">Interactive Technology Orbit</h2>
+          <p>Hover over any technology node to explore our full-stack engineering capabilities.</p>
         </div>
 
-        <!-- Service tile grid -->
-        <div class="svc-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;">
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🤖</div>
-            <div class="svc-tile-title">AI & ML</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🌐</div>
-            <div class="svc-tile-title">Web Dev</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">📱</div>
-            <div class="svc-tile-title">Mobile Apps</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">☁️</div>
-            <div class="svc-tile-title">Cloud & DevOps</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🏢</div>
-            <div class="svc-tile-title">Enterprise</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🎨</div>
-            <div class="svc-tile-title">UI/UX Design</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🚀</div>
-            <div class="svc-tile-title">SaaS Products</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🔌</div>
-            <div class="svc-tile-title">API & Backend</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">📊</div>
-            <div class="svc-tile-title">Data & Analytics</div>
-          </div>
-          <div class="svc-tile card reveal" style="padding:24px 18px;text-align:center;cursor:default;">
-            <div class="svc-tile-icon">🎯</div>
-            <div class="svc-tile-title">Product Strategy</div>
-          </div>
-        </div>
+        <!-- Orbit Stage -->
+        <div class="orbit-stage reveal">
+          <div class="orbit-container">
+            <!-- Background SVG Orbit Ring and Radar Rays -->
+            <svg class="orbit-ring-svg" viewBox="0 0 580 540" fill="none">
+              <!-- Outer Orbit Ring -->
+              <circle cx="290" cy="270" r="200" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="6 6"/>
+              <circle class="orbit-pulse-ring" cx="290" cy="270" r="200" stroke="var(--azure)" stroke-width="1.2" stroke-opacity="0.3"/>
 
-        <!-- Tagline row -->
-        <div class="svc-tagline reveal" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-top:40px;padding:24px 28px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);">
-          <p style="font-size:15px;color:var(--muted);max-width:500px;">From idea to deployed product — one team owns design, engineering, and cloud. No handoffs, no surprises.</p>
-          <a href="/contact.html" class="btn btn-azure btn-sm" style="flex-shrink:0;">Talk to us about your project →</a>
+              <!-- Connection Rays from Center to 6 Nodes -->
+              <line class="orbit-ray ray-mobile" x1="290" y1="270" x2="290" y2="70" stroke="var(--line)" stroke-width="1.2"/>
+              <line class="orbit-ray ray-ai" x1="290" y1="270" x2="463" y2="170" stroke="var(--line)" stroke-width="1.2"/>
+              <line class="orbit-ray ray-web" x1="290" y1="270" x2="463" y2="370" stroke="var(--line)" stroke-width="1.2"/>
+              <line class="orbit-ray ray-uiux" x1="290" y1="270" x2="290" y2="470" stroke="var(--line)" stroke-width="1.2"/>
+              <line class="orbit-ray ray-backend" x1="290" y1="270" x2="117" y2="370" stroke="var(--line)" stroke-width="1.2"/>
+              <line class="orbit-ray ray-cloud" x1="290" y1="270" x2="117" y2="170" stroke="var(--line)" stroke-width="1.2"/>
+            </svg>
+
+            <!-- Center Circle -->
+            <div class="orbit-center-core">
+              <div class="orbit-center-dot">●</div>
+              <div class="orbit-center-title">Everything you need,</div>
+              <div class="orbit-center-sub">one engineering partner.</div>
+            </div>
+
+            <!-- 6 Technology Orbit Nodes -->
+            <!-- 1. Mobile (Top) -->
+            <div class="orbit-node node-mobile" data-svc="mobile" style="top:42px; left:50%; transform:translateX(-50%);">
+              <div class="orbit-pill">
+                <span class="orbit-pill-icon">📱</span>
+                <span>Mobile</span>
+              </div>
+            </div>
+
+            <!-- 2. AI (Top Right) -->
+            <div class="orbit-node node-ai" data-svc="ai" style="top:140px; right:40px;">
+              <div class="orbit-pill">
+                <span class="orbit-pill-icon">🤖</span>
+                <span>AI &amp; ML</span>
+              </div>
+            </div>
+
+            <!-- 3. Web (Bottom Right) -->
+            <div class="orbit-node node-web" data-svc="web" style="bottom:140px; right:40px;">
+              <div class="orbit-pill">
+                <span class="orbit-pill-icon">🌐</span>
+                <span>Web</span>
+              </div>
+            </div>
+
+            <!-- 4. UI/UX (Bottom) -->
+            <div class="orbit-node node-uiux" data-svc="uiux" style="bottom:42px; left:50%; transform:translateX(-50%);">
+              <div class="orbit-pill">
+                <span class="orbit-pill-icon">🎨</span>
+                <span>UI/UX</span>
+              </div>
+            </div>
+
+            <!-- 5. Backend (Bottom Left) -->
+            <div class="orbit-node node-backend" data-svc="backend" style="bottom:140px; left:40px;">
+              <div class="orbit-pill">
+                <span class="orbit-pill-icon">🔌</span>
+                <span>Backend</span>
+              </div>
+            </div>
+
+            <!-- 6. Cloud (Top Left) -->
+            <div class="orbit-node node-cloud" data-svc="cloud" style="top:140px; left:40px;">
+              <div class="orbit-pill">
+                <span class="orbit-pill-icon">☁️</span>
+                <span>Cloud</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Service Detail Banner -->
+          <div class="orbit-detail-banner reveal" id="orbit-detail">
+            <div class="orbit-detail-icon" id="orbit-icon">🤖</div>
+            <div class="orbit-detail-content">
+              <h3 id="orbit-title" style="font-size:18px;margin-bottom:4px;color:var(--text);">AI &amp; Machine Learning</h3>
+              <p id="orbit-desc" style="font-size:14px;color:var(--muted);margin:0;">Custom LLM integrations, RAG pipelines, fine-tuned models &amp; production MLOps.</p>
+            </div>
+            <a href="/contact.html" class="btn btn-azure btn-sm" style="margin-left:auto;flex-shrink:0;">Discuss AI Project →</a>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Style for Interactive Orbit -->
     <style>
-      .svc-tile-icon { font-size:1.8rem; margin-bottom:10px; }
-      .svc-tile-title { font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600; color:var(--text); }
-      .svc-tile:hover .svc-tile-icon { transform:scale(1.12); transition:transform .2s; }
-      @media(max-width:980px){ .svc-grid{ grid-template-columns:repeat(4,1fr) !important; } }
-      @media(max-width:600px){ .svc-grid{ grid-template-columns:repeat(2,1fr) !important; } }
+      .orbit-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .orbit-container {
+        position: relative;
+        width: 100%;
+        max-width: 580px;
+        height: 540px;
+        margin: 0 auto;
+      }
+      .orbit-ring-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .orbit-pulse-ring {
+        animation: ring-pulse 4s infinite ease-in-out;
+        transform-origin: 290px 270px;
+      }
+      @keyframes ring-pulse {
+        0%, 100% { transform: scale(1); opacity: 0.25; }
+        50% { transform: scale(1.02); opacity: 0.55; }
+      }
+      .orbit-ray {
+        transition: stroke 0.35s ease, stroke-width 0.35s ease;
+      }
+
+      /* Center Circle */
+      .orbit-center-core {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, var(--panel-2), var(--ink));
+        border: 1px solid var(--line-strong);
+        box-shadow: 0 0 50px rgba(76,124,240,0.15), inset 0 0 25px rgba(76,124,240,0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+        z-index: 10;
+        transition: all 0.35s ease;
+      }
+      .orbit-center-dot {
+        color: var(--azure);
+        font-size: 10px;
+        margin-bottom: 6px;
+        animation: pulse-dot 2s infinite ease-in-out;
+      }
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 0.4; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.4); }
+      }
+      .orbit-center-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .orbit-center-sub {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--azure);
+        margin-top: 4px;
+      }
+
+      /* Orbit Nodes */
+      .orbit-node {
+        position: absolute;
+        z-index: 12;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .orbit-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 22px;
+        background: rgba(16, 26, 48, 0.90);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid var(--line-strong);
+        border-radius: 100px;
+        color: var(--text);
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 14.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        transition: all 0.35s ease;
+      }
+      .orbit-pill-icon {
+        font-size: 19px;
+        transition: transform 0.35s ease;
+      }
+
+      /* Hover States & Expansion */
+      .orbit-node:hover {
+        z-index: 20;
+      }
+      .orbit-node:hover .orbit-pill,
+      .orbit-node.active .orbit-pill {
+        border-color: var(--azure);
+        background: var(--panel-2);
+        box-shadow: 0 0 35px var(--azure-glow), 0 12px 36px rgba(0,0,0,0.5);
+        transform: scale(1.18) translateY(-2px);
+        color: #ffffff;
+      }
+      .orbit-node:hover .orbit-pill-icon,
+      .orbit-node.active .orbit-pill-icon {
+        transform: scale(1.3) rotate(10deg);
+      }
+
+      /* Special AI Hover Animation: Rotates & Expands */
+      .orbit-node[data-svc="ai"]:hover .orbit-pill,
+      .orbit-node[data-svc="ai"].active .orbit-pill {
+        border-color: var(--brass);
+        box-shadow: 0 0 45px rgba(201,162,75,0.45), 0 12px 36px rgba(0,0,0,0.5);
+        transform: scale(1.24) rotate(-3deg);
+      }
+
+      /* Dynamic Detail Banner */
+      .orbit-detail-banner {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 640px;
+        margin-top: 32px;
+        padding: 22px 28px;
+        background: var(--panel);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        transition: border-color 0.3s ease;
+      }
+      .orbit-detail-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--azure-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 680px) {
+        .orbit-container { height: 480px; }
+        .orbit-center-core { width: 180px; height: 180px; padding: 16px; }
+        .orbit-center-title { font-size: 13.5px; }
+        .orbit-center-sub { font-size: 12.5px; }
+        .orbit-pill { padding: 8px 14px; font-size: 12.5px; }
+        .orbit-detail-banner { flex-direction: column; text-align: center; }
+        .orbit-detail-banner .btn { margin-left: 0 !important; width: 100%; justify-content: center; }
+      }
     </style>
+
+    <!-- JavaScript for Orbit Hover Interactivity -->
+    <script>
+      (function() {
+        const servicesData = {
+          ai: {
+            icon: '🤖',
+            title: 'AI & Machine Learning',
+            desc: 'Custom LLM integrations, RAG pipelines, fine-tuned models & production MLOps.',
+            linkText: 'Discuss AI Project →',
+            color: 'var(--brass)'
+          },
+          mobile: {
+            icon: '📱',
+            title: 'Mobile App Development',
+            desc: 'Native iOS, Android & React Native apps engineered for 60fps performance and scale.',
+            linkText: 'Discuss Mobile App →',
+            color: 'var(--azure)'
+          },
+          web: {
+            icon: '🌐',
+            title: 'Custom Web Engineering',
+            desc: 'High-performance Next.js & React web applications with sub-100ms load times.',
+            linkText: 'Discuss Web App →',
+            color: 'var(--azure)'
+          },
+          uiux: {
+            icon: '🎨',
+            title: 'UI/UX Product Design',
+            desc: 'Research-led design systems, Figma wireframes & interactive prototypes.',
+            linkText: 'Discuss UI/UX Design →',
+            color: 'var(--azure)'
+          },
+          backend: {
+            icon: '🔌',
+            title: 'API & Backend Systems',
+            desc: 'Scalable Microservices, GraphQL/gRPC APIs, Kafka streams & resilient database architecture.',
+            linkText: 'Discuss Backend →',
+            color: 'var(--azure)'
+          },
+          cloud: {
+            icon: '☁️',
+            title: 'Cloud Infrastructure & DevOps',
+            desc: 'AWS & GCP infrastructure automation with Terraform, Kubernetes & SOC2 compliance.',
+            linkText: 'Discuss Cloud / DevOps →',
+            color: 'var(--azure)'
+          }
+        };
+
+        const nodes = document.querySelectorAll('.orbit-node');
+        const iconEl = document.getElementById('orbit-icon');
+        const titleEl = document.getElementById('orbit-title');
+        const descEl = document.getElementById('orbit-desc');
+        const bannerEl = document.getElementById('orbit-detail');
+
+        nodes.forEach(node => {
+          node.addEventListener('mouseenter', () => {
+            const key = node.dataset.svc;
+            const data = servicesData[key];
+            if (!data) return;
+
+            // Update details
+            iconEl.textContent = data.icon;
+            titleEl.textContent = data.title;
+            descEl.textContent = data.desc;
+            bannerEl.style.borderColor = data.color;
+
+            // Highlight ray line
+            document.querySelectorAll('.orbit-ray').forEach(ray => ray.style.stroke = 'var(--line)');
+            const targetRay = document.querySelector(`.ray-\${key}`);
+            if (targetRay) {
+              targetRay.style.stroke = data.color;
+              targetRay.style.strokeWidth = '2.2';
+            }
+          });
+
+          node.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.orbit-ray').forEach(ray => {
+              ray.style.stroke = 'var(--line)';
+              ray.style.strokeWidth = '1.2';
+            });
+          });
+        });
+      })();
+    </script>
+
 
 
 
