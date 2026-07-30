@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — Softmaco</title>
+  <meta name="description" content="Explore Softmaco's venture products: RestroAI, InventoryPro, SoftCRM, DataPulse AI and more.">
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    main { padding-top: 100px; }
+    .hero-section {
+      padding: 80px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black, transparent 70%);
+      pointer-events: none;
+    }
+    /* Product card layout */
+    .prod-card { padding: 0; overflow: hidden; cursor: pointer; }
+    .prod-card:hover { transform: translateY(-6px); }
+    .prod-top { padding: 28px 26px 0; }
+    .prod-logo {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--azure), #2E4E9E);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+    .prod-cat { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; }
+    .prod-card h2 { font-size: 20px; margin-bottom: 10px; }
+    .prod-card .desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+    .prod-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 26px; margin-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .prod-year { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted-2); }
+    .prod-link { font-size:13.5px; color:var(--azure); font-weight:500; display:flex; align-items:center; gap:5px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="hero-section">
+      <div class="wrap">
+        <div class="section-head center" style="margin-bottom:48px;">
+          <div class="eyebrow center">SOFTMACO VENTURE PRODUCTS</div>
+          <h1 style="font-size:clamp(32px,4vw,52px);margin-top:16px;">Software we build and run ourselves.</h1>
+          <p>Every product is a live proving ground — shipped, iterated, and openly used by real businesses. No vaporware.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap" style="padding-bottom:80px;">
+      <!-- Filter bar -->
+      <div class="filter-bar reveal">
+        <div class="filter-pills" id="cat-filters">
+          <button class="filter-pill active" data-cat="All">All products</button>
+          <button class="filter-pill" data-cat="AI">AI</button>
+          <button class="filter-pill" data-cat="SaaS">SaaS</button>
+          <button class="filter-pill" data-cat="In Development">In Development</button>
+        </div>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="prod-search" class="search-input" type="text" placeholder="Search products…">
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="g3" id="prod-grid"></div>
+
+      <!-- Empty state -->
+      <div id="empty" style="display:none;text-align:center;padding:80px 0;">
+        <div style="font-size:3rem;margin-bottom:16px;">🔍</div>
+        <h3 style="margin-bottom:8px;">No products match</h3>
+        <p style="color:var(--muted);margin-bottom:24px;">Try a different filter or search term.</p>
+        <a href="/contact.html" class="btn btn-ghost">Request a custom build</a>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box reveal" style="margin-top:80px;">
+        <div class="eyebrow center" style="margin-bottom:18px;">BUILD WITH US</div>
+        <h2>Need something we haven't built yet?</h2>
+        <p>Tell us the problem. We'll tell you if it's better to buy something we have or build something new together.</p>
+        <div class="cta-actions">
+          <a href="/contact.html" class="btn btn-primary btn-lg">Start a conversation</a>
+          <a href="/services.html" class="btn btn-ghost btn-lg">See our services</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/data.js"></script>
+  <script src="/js/shared.js"></script>
+  <script>
+    function badgeHtml(status) {
+      if (status === 'Live') return `<span class="badge badge-live">Live</span>`;
+      if (status === 'Beta') return `<span class="badge badge-beta">Beta</span>`;
+      return `<span class="badge badge-dev">${status}</span>`;
+    }
+
+    let activeCat = 'All', query = '';
+
+    function render() {
+      const prods = SOFTMACO_DATA.products.filter(p => {
+        const mc = activeCat === 'All' || p.status === activeCat || p.category === activeCat;
+        const mq = !query || p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query);
+        return mc && mq;
+      });
+
+      const grid = document.getElementById('prod-grid');
+      const empty = document.getElementById('empty');
+
+      if (!prods.length) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      grid.innerHTML = prods.map(p => `
+        <div class="card prod-card reveal" onclick="location.href='/product.html?id=${p.id}'">
+          <div class="prod-top">
+            ${badgeHtml(p.status)}
+            <div class="prod-logo" style="margin-top:14px;">${p.logo}</div>
+            <div class="prod-cat">${p.category}</div>
+            <h2>${p.name}</h2>
+            <p class="desc">${p.description.substring(0, 130)}…</p>
+            <div class="tech-row" style="margin-bottom:4px;">
+              ${p.techStack.frontend.slice(0,3).map(t => `<span class="tech-pill">${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="prod-bottom">
+            <span class="prod-year mono">${p.launchDate}</span>
+            <span class="prod-link">Learn more →</span>
+          </div>
+        </div>`).join('');
+
+      // re-trigger reveal on new cards
+      setTimeout(() => {
+        document.querySelectorAll('.reveal:not(.in)').forEach(el => {
+          const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+          }, { threshold: 0.1 });
+          io.observe(el);
+        });
+      }, 50);
+    }
+
+    document.getElementById('cat-filters').addEventListener('click', e => {
+      const btn = e.target.closest('.filter-pill');
+      if (!btn) return;
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      render();
+    });
+
+    document.getElementById('prod-search').addEventListener('input', e => {
+      query = e.target.value.toLowerCase();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

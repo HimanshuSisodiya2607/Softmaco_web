@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Softmaco</title>
+  <meta name="description" content="Get in touch with Softmaco for custom software, AI solutions, and enterprise engineering.">
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    main { padding-top: 140px; padding-bottom: 100px; }
+    .contact-box { max-width: 680px; margin: 40px auto 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <div class="section-head center reveal" style="margin-bottom:0;">
+        <div class="eyebrow center">GET IN TOUCH</div>
+        <h1 style="font-size:clamp(32px, 4vw, 48px); margin-top:14px;">Let's build together.</h1>
+        <p>Tell us about your project, timeline, and goals. We respond within 4 business hours.</p>
+      </div>
+
+      <div class="contact-box">
+        <div class="card reveal" style="padding: 40px;">
+          <form onsubmit="handleContact(event)">
+            <div class="g2" style="gap:16px;">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" placeholder="Sarah Jenkins" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Work Email</label>
+                <input type="email" class="form-input" placeholder="sarah@company.com" required>
+              </div>
+            </div>
+            <div class="g2" style="gap:16px;">
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-input" placeholder="+1 (555) 000-0000">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Services Interested In</label>
+                <select class="form-select">
+                  <option>Custom Software Development</option>
+                  <option>AI / Machine Learning</option>
+                  <option>Mobile App Development</option>
+                  <option>SaaS Product Engineering</option>
+                  <option>Enterprise Licensing / Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Project Details</label>
+              <textarea class="form-textarea" placeholder="Briefly describe what you're looking to build…" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-azure btn-lg" style="width:100%; justify-content:center;">Send Message →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/shared.js"></script>
+  <script>
+    function handleContact(e) {
+      e.preventDefault();
+      showToast("Message sent! We'll get back to you shortly.");
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
