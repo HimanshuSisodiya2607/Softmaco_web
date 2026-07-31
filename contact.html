@@ -102,8 +102,41 @@
     }
     function handleContact(e) {
       e.preventDefault();
-      showToast("Message sent! We'll get back to you shortly.");
-      e.target.reset();
+      const form = e.target;
+      const inputs = form.querySelectorAll('input');
+      const name = inputs[0] ? inputs[0].value : 'Inquirer';
+      const email = inputs[1] ? inputs[1].value : '';
+      const phone = inputs[2] ? inputs[2].value : '';
+      const service = form.querySelector('select') ? form.querySelector('select').value : 'Custom Software';
+      const details = form.querySelector('textarea') ? form.querySelector('textarea').value : '';
+
+      const serviceValues = {
+        'Custom Software Development': 45000,
+        'AI / Machine Learning': 65000,
+        'Mobile App Development': 35000,
+        'SaaS Product Engineering': 55000,
+        'Enterprise Licensing / Other': 85000
+      };
+
+      const newLead = {
+        id: 'lead_' + Date.now(),
+        name: name,
+        email: email,
+        phone: phone,
+        service: service,
+        details: details,
+        status: 'New',
+        value: serviceValues[service] || 40000,
+        assignedTo: 'arjun-mehta',
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+
+      const leads = JSON.parse(localStorage.getItem('softmaco_leads') || '[]');
+      leads.unshift(newLead);
+      localStorage.setItem('softmaco_leads', JSON.stringify(leads));
+
+      showToast("Message sent! Your lead has been submitted to our team portal.");
+      form.reset();
     }
   </script>
 </body>

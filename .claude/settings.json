@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(TZ=Asia/Calcutta node -e ' *)",
+      "Bash(pkill -f \"http.server 8099\")",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-himanshu-Desktop-softmaco/e2e03b8e-3705-4d0e-aa1d-923409d39f9b/scratchpad/shots)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-sandbox --window-size=1440,2200 --screenshot=portal_login.png http://localhost:8099/portal.html)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-sandbox --remote-debugging-port=9333 --user-data-dir=/private/tmp/claude-501/-Users-himanshu-Desktop-softmaco/e2e03b8e-3705-4d0e-aa1d-923409d39f9b/scratchpad/chrome-profile about:blank)",
+      "Bash(echo \"chrome pid: $!\")",
+      "Bash(curl -sf http://localhost:9333/json)",
+      "Bash(break)",
+      "Bash(curl -s http://localhost:9333/json)",
+      "Bash(node cdp_shot.js)",
+      "Bash(node cdp_shot3.js)",
+      "Bash(lsof -ti:8099 -sTCP:LISTEN)",
+      "Bash(xargs -r kill)",
+      "Bash(lsof -ti:9333 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9333\")",
+      "Bash(sed 's/9333/9334/g' cdp_shot3.js)",
+      "Bash(node cdp_shot4.js)",
+      "Bash(lsof -ti:9334 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9334\")",
+      "Bash(node cdp_nav.js)",
+      "Bash(lsof -ti:9335 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9335\")",
+      "Bash(lsof -ti:9336 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9336\")",
+      "Bash(sed -i '' 's/nav2_portal.png/nav3_portal.png/; s/nav2_admin.png/nav3_admin.png/; s/nav2_portal_mobile.png/nav3_portal_mobile.png/' cdp7.js)",
+      "Bash(node cdp7.js)",
+      "Bash(lsof -ti:9337 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9337\")",
+      "Bash(node cdpm.js after)",
+      "Bash(lsof -ti:9338 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9338\")"
+    ]
+  }
+}

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Sales & Lead Control | Softmaco</title>
+<meta name="description" content="Softmaco Admin Panel — manage sales team, assign cities, and distribute leads day-wise.">
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  main{ padding-top:104px; padding-bottom:100px; }
+  .admin-tabs{ display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap; }
+  .admin-tab{
+    padding:10px 18px; border-radius:100px; border:1px solid var(--line-strong); background:var(--panel);
+    color:var(--muted); font-size:13.5px; font-weight:500; cursor:pointer; transition:all .2s ease;
+  }
+  .admin-tab.active{ background:var(--azure-soft); border-color:var(--azure); color:var(--azure); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  .team-row{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    background:var(--panel); border:1px solid var(--line-strong); border-radius:var(--radius);
+    padding:16px 20px; margin-bottom:12px;
+  }
+  .team-row .who{ display:flex; align-items:center; gap:14px; }
+  .team-row img{ width:44px; height:44px; border-radius:50%; border:2px solid var(--azure); }
+  .team-row .name{ font-weight:600; font-size:15px; }
+  .team-row .meta{ font-size:12px; color:var(--muted); margin-top:2px; }
+  .city-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; padding:4px 10px; border-radius:100px;
+    background:var(--brass-soft); color:var(--brass); border:1px solid rgba(201,162,75,0.3);
+  }
+  .stat-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+  .stat-strip .card{ padding:20px 22px; text-align:left; }
+  .stat-strip .stat-num{ font-size:26px; }
+
+  .dist-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .dist-table th{ text-align:left; padding:10px 14px; color:var(--muted-2); font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; border-bottom:1px solid var(--line-strong); }
+  .dist-table td{ padding:12px 14px; border-bottom:1px solid var(--line); }
+  .dist-table tr:hover td{ background:var(--panel-2); }
+  .day-pill{ font-family:'IBM Plex Mono',monospace; font-size:11px; padding:3px 9px; border-radius:100px; background:var(--azure-soft); color:var(--azure); }
+  .day-pill.today{ background:var(--emerald-soft); color:var(--emerald); }
+  .day-pill.future{ background:rgba(200,210,235,0.08); color:var(--muted); }
+
+  textarea.form-textarea{ min-height:140px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; }
+  .hint{ font-size:12px; color:var(--muted-2); margin-top:6px; }
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<main>
+  <div class="wrap">
+
+    <!-- LOGIN GATE -->
+    <div id="admin-login" class="reveal" style="max-width:420px;margin:20px auto 0;text-align:center;">
+      <div class="section-head center" style="margin-bottom:24px;">
+        <div class="eyebrow center">ADMIN CONTROL</div>
+        <h1 style="font-size:30px;margin-top:10px;">Sales &amp; Lead Admin</h1>
+        <p style="font-size:14px;">Manage your sales team, assign cities, and roll out leads day-wise.</p>
+      </div>
+      <div class="card">
+        <div class="form-group" style="text-align:left;">
+          <label class="form-label">Admin Passcode</label>
+          <input type="password" class="form-input" id="admin-pass" placeholder="Enter admin passcode">
+        </div>
+        <button class="btn btn-azure btn-lg" style="width:100%;justify-content:center;" onclick="adminLogin()">Enter Admin Panel →</button>
+        <p class="hint">Default demo passcode: <strong>admin123</strong></p>
+      </div>
+    </div>
+
+    <!-- ADMIN VIEW -->
+    <div id="admin-view" style="display:none;">
+      <div class="dash-head reveal" style="margin-bottom:24px;">
+        <div class="eyebrow">ADMIN CONTROL</div>
+        <h1 style="font-size:28px;margin-top:8px;">Sales &amp; Lead Control</h1>
+      </div>
+
+      <div class="stat-strip reveal">
+        <div class="card"><div class="metric-title mono">TEAM MEMBERS</div><div class="stat-num" id="s-team">0</div></div>
+        <div class="card"><div class="metric-title mono">CITIES COVERED</div><div class="stat-num" id="s-cities">0</div></div>
+        <div class="card"><div class="metric-title mono">TOTAL LEADS</div><div class="stat-num" id="s-leads">0</div></div>
+        <div class="card"><div class="metric-title mono">RELEASING TODAY</div><div class="stat-num" id="s-today">0</div></div>
+      </div>
+
+      <div class="admin-tabs reveal">
+        <div class="admin-tab active" data-tab="team" onclick="switchTab('team')">👥 Team &amp; Cities</div>
+        <div class="admin-tab" data-tab="upload" onclick="switchTab('upload')">📤 Upload &amp; Distribute Leads</div>
+        <div class="admin-tab" data-tab="queue" onclick="switchTab('queue')">📅 Distribution Queue</div>
+      </div>
+
+      <!-- TAB: TEAM -->
+      <div class="tab-panel active" id="tab-team">
+        <div class="grid-2">
+          <div>
+            <h3 style="font-size:17px;margin-bottom:14px;">Add Team Member</h3>
+            <div class="card">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="tm-name" placeholder="e.g. Rahul Verma">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Role</label>
+                <input type="text" class="form-input" id="tm-role" placeholder="Sales Executive">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Assigned City / Cities</label>
+                <input type="text" class="form-input" id="tm-city" placeholder="e.g. Bikaner, Jodhpur (comma separated)">
+                <p class="hint">Leads uploaded for these cities will be routed to this person.</p>
+              </div>
+              <button class="btn btn-azure btn-lg" style="width:100%;justify-content:center;" onclick="addTeamMember()">+ Add Member</button>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size:17px;margin-bottom:14px;">Current Team</h3>
+            <div id="team-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: UPLOAD -->
+      <div class="tab-panel" id="tab-upload">
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size:17px;margin-bottom:6px;">Paste / Upload Leads</h3>
+            <p class="hint" style="margin-bottom:14px;">One lead per line: <strong>Name, Phone, City</strong> (email optional as 4th value).</p>
+            <div class="form-group">
+              <label class="form-label">Leads (CSV format)</label>
+              <textarea class="form-textarea" id="bulk-leads" placeholder="Ramesh Traders, 9876543210, Bikaner
+Sunita Store, 9123456780, Bikaner
+Kunal Retail, 9988776655, Jodhpur"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Or upload a .csv file</label>
+              <input type="file" class="form-input" id="csv-file" accept=".csv,text/csv" onchange="handleCsvFile(event)">
+            </div>
+            <div class="g2" style="gap:14px;">
+              <div class="form-group">
+                <label class="form-label">Leads per salesperson / day</label>
+                <input type="number" class="form-input" id="batch-size" value="10" min="1">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Start releasing from</label>
+                <input type="date" class="form-input" id="start-date">
+              </div>
+            </div>
+            <button class="btn btn-azure btn-lg" style="width:100%;justify-content:center;" onclick="distributeLeads()">Distribute Leads →</button>
+            <p class="hint" id="upload-preview"></p>
+          </div>
+          <div class="card" style="background:var(--panel-2);">
+            <h3 style="font-size:16px;margin-bottom:10px;">How distribution works</h3>
+            <p style="font-size:13.5px;color:var(--muted);margin-bottom:10px;">1. Each lead's <strong>City</strong> is matched to a team member assigned to that city.</p>
+            <p style="font-size:13.5px;color:var(--muted);margin-bottom:10px;">2. Leads for that person are split into daily batches — e.g. 100 leads at 10/day = released across 10 days.</p>
+            <p style="font-size:13.5px;color:var(--muted);margin-bottom:10px;">3. Each batch gets a <strong>release date</strong>. A salesperson only sees leads whose release date has arrived, in their Team Portal.</p>
+            <p style="font-size:13.5px;color:var(--muted);">4. If a city has no assigned salesperson yet, add them first in the "Team &amp; Cities" tab.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: QUEUE -->
+      <div class="tab-panel" id="tab-queue">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+          <h3 style="font-size:17px;">Full Distribution Queue</h3>
+          <button class="btn btn-ghost btn-sm" style="color:var(--rose);border-color:rgba(240,76,108,0.3);" onclick="clearAllLeads()">Clear All Leads</button>
+        </div>
+        <div class="card" style="padding:8px 4px;overflow-x:auto;">
+          <table class="dist-table" id="queue-table">
+            <thead><tr><th>Lead</th><th>City</th><th>Assigned To</th><th>Release Day</th><th>Status</th></tr></thead>
+            <tbody id="queue-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+  const LS_TEAM = 'softmaco_team_members';
+  const LS_LEADS = 'softmaco_leads';
+
+  /* Local-calendar-date helpers (avoid UTC-shift bugs from toISOString in +offset timezones) */
+  function fmtLocalDate(d){
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function parseLocalDate(dateStr){
+    const [y,m,d] = dateStr.split('-').map(Number);
+    return new Date(y, m-1, d);
+  }
+  function todayISO(){ return fmtLocalDate(new Date()); }
+  document.getElementById('start-date').value = todayISO();
+
+  /* ---- Auth (demo-level, front-end only) ---- */
+  function adminLogin(){
+    const val = document.getElementById('admin-pass').value;
+    if(val === 'admin123'){
+      sessionStorage.setItem('softmaco_admin', '1');
+      showAdmin();
+      window.smRefreshNavAuth && window.smRefreshNavAuth();
+    } else {
+      showToast('Incorrect admin passcode.');
+    }
+  }
+  function adminLogout(){
+    sessionStorage.removeItem('softmaco_admin');
+    document.getElementById('admin-view').style.display='none';
+    document.getElementById('admin-login').style.display='block';
+    window.smRefreshNavAuth && window.smRefreshNavAuth();
+  }
+  function showAdmin(){
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-view').style.display='block';
+    renderAll();
+  }
+  if(sessionStorage.getItem('softmaco_admin')==='1') showAdmin();
+
+  /* ---- Tabs ---- */
+  function switchTab(name){
+    document.querySelectorAll('.admin-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    if(name==='queue') renderQueue();
+  }
+
+  /* ---- Team storage ---- */
+  function getTeam(){
+    return JSON.parse(localStorage.getItem(LS_TEAM) || '[]');
+  }
+  function saveTeam(list){ localStorage.setItem(LS_TEAM, JSON.stringify(list)); renderAll(); }
+
+  function allTeamMembers(){
+    // Merge static demo team (data.js) with admin-added members
+    const staticTeam = (typeof SOFTMACO_DATA !== 'undefined' && SOFTMACO_DATA.team) ? SOFTMACO_DATA.team.map(m => ({
+      id: m.id, name: m.name, role: m.role, city: m.city || '', photo: m.photo, isStatic: true
+    })) : [];
+    return [...staticTeam, ...getTeam()];
+  }
+
+  function addTeamMember(){
+    const name = document.getElementById('tm-name').value.trim();
+    const role = document.getElementById('tm-role').value.trim() || 'Sales Executive';
+    const city = document.getElementById('tm-city').value.trim();
+    if(!name || !city){ showToast('Name and city are required.'); return; }
+    const list = getTeam();
+    const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-' + Date.now().toString().slice(-4);
+    list.push({
+      id, name, role, city,
+      photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=14203A&color=4C7CF0&size=160`
+    });
+    saveTeam(list);
+    document.getElementById('tm-name').value='';
+    document.getElementById('tm-role').value='';
+    document.getElementById('tm-city').value='';
+    showToast(`Added ${name} to the team.`);
+  }
+
+  function removeTeamMember(id){
+    if(!confirm('Remove this team member?')) return;
+    saveTeam(getTeam().filter(m=>m.id!==id));
+  }
+
+  function renderTeamList(){
+    const members = allTeamMembers();
+    const el = document.getElementById('team-list');
+    if(!members.length){ el.innerHTML = `<p class="hint">No team members yet. Add your first one.</p>`; return; }
+    el.innerHTML = members.map(m => `
+      <div class="team-row">
+        <div class="who">
+          <img src="${m.photo}" alt="${m.name}">
+          <div>
+            <div class="name">${m.name}${m.isStatic ? ' <span style="color:var(--muted-2);font-size:11px;">(default)</span>' : ''}</div>
+            <div class="meta">${m.role}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+          ${m.city ? m.city.split(',').map(c=>`<span class="city-tag">${c.trim()}</span>`).join('') : '<span class="hint" style="margin:0;">No city assigned</span>'}
+          ${!m.isStatic ? `<button class="btn btn-ghost btn-sm" style="padding:4px 8px;" onclick="removeTeamMember('${m.id}')">🗑️</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ---- Leads storage ---- */
+  function getLeads(){ return JSON.parse(localStorage.getItem(LS_LEADS) || '[]'); }
+  function saveLeadsList(list){ localStorage.setItem(LS_LEADS, JSON.stringify(list)); renderAll(); }
+
+  function findAssigneeForCity(city){
+    const members = allTeamMembers();
+    const norm = c => (c||'').trim().toLowerCase();
+    const match = members.filter(m => (m.city||'').split(',').some(c => norm(c) === norm(city)));
+    if(!match.length) return null;
+    // simple round robin across matches, tracked in a counter per city
+    window._cityRR = window._cityRR || {};
+    const key = norm(city);
+    window._cityRR[key] = (window._cityRR[key] || 0) + 1;
+    return match[(window._cityRR[key]-1) % match.length];
+  }
+
+  function handleCsvFile(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { document.getElementById('bulk-leads').value = ev.target.result.trim(); };
+    reader.readAsText(file);
+  }
+
+  function distributeLeads(){
+    const raw = document.getElementById('bulk-leads').value.trim();
+    if(!raw){ showToast('Paste or upload leads first.'); return; }
+    const batchSize = parseInt(document.getElementById('batch-size').value) || 10;
+    const startDate = document.getElementById('start-date').value || todayISO();
+
+    const rows = raw.split('\n').map(r=>r.trim()).filter(Boolean);
+    const parsed = rows.map(r => {
+      const parts = r.split(',').map(x=>x.trim());
+      return { name: parts[0]||'Unnamed Lead', phone: parts[1]||'', city: parts[2]||'Unassigned', email: parts[3]||'' };
+    });
+
+    // group by city
+    const byCity = {};
+    parsed.forEach(p => { (byCity[p.city] = byCity[p.city] || []).push(p); });
+
+    const leads = getLeads();
+    let unassignedCount = 0, createdCount = 0;
+
+    Object.keys(byCity).forEach(city => {
+      const cityLeads = byCity[city];
+      const assignee = findAssigneeForCity(city);
+      cityLeads.forEach((lead, idx) => {
+        const dayIndex = Math.floor(idx / batchSize); // 0-based day offset
+        const releaseDate = addDays(startDate, dayIndex);
+        if(!assignee) unassignedCount++;
+        leads.push({
+          id: 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+          name: lead.name,
+          phone: lead.phone,
+          email: lead.email,
+          city: city,
+          service: 'General Inquiry',
+          details: `Bulk-uploaded lead for ${city}.`,
+          status: 'New',
+          value: 0,
+          assignedTo: assignee ? assignee.id : null,
+          releaseDate: releaseDate,
+          batchDay: dayIndex + 1,
+          date: new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
+        });
+        createdCount++;
+      });
+    });
+
+    saveLeadsList(leads);
+    document.getElementById('bulk-leads').value = '';
+    document.getElementById('upload-preview').textContent =
+      `✅ Distributed ${createdCount} leads across ${Object.keys(byCity).length} cities, ${batchSize}/day per salesperson.` +
+      (unassignedCount ? ` ⚠️ ${unassignedCount} leads have no matching city assignee yet — add a team member for that city.` : '');
+    showToast(`Distributed ${createdCount} leads.`);
+    switchTab('queue');
+  }
+
+  function addDays(dateStr, days){
+    const d = parseLocalDate(dateStr);
+    d.setDate(d.getDate() + days);
+    return fmtLocalDate(d);
+  }
+
+  function clearAllLeads(){
+    if(!confirm('Delete ALL leads from the system? This cannot be undone.')) return;
+    localStorage.removeItem(LS_LEADS);
+    renderAll();
+    showToast('All leads cleared.');
+  }
+
+  /* ---- Queue table ---- */
+  function renderQueue(){
+    const leads = getLeads().filter(l => l.city); // only bulk-distributed leads have city
+    const members = allTeamMembers();
+    const today = todayISO();
+    const tbody = document.getElementById('queue-body');
+    if(!leads.length){ tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px;">No distributed leads yet.</td></tr>`; return; }
+
+    const sorted = [...leads].sort((a,b) => (a.releaseDate||'').localeCompare(b.releaseDate||''));
+    tbody.innerHTML = sorted.map(l => {
+      const person = members.find(m=>m.id===l.assignedTo);
+      const dayClass = !l.releaseDate ? '' : (l.releaseDate < today ? 'today' : (l.releaseDate === today ? 'today' : 'future'));
+      const label = !l.releaseDate ? '—' : (l.releaseDate <= today ? `Released · ${l.releaseDate}` : `Day ${l.batchDay} · ${l.releaseDate}`);
+      return `<tr>
+        <td>${l.name}${l.phone ? '<br><span class="hint">'+l.phone+'</span>' : ''}</td>
+        <td><span class="city-tag">${l.city}</span></td>
+        <td>${person ? person.name : '<span style="color:var(--rose);">Unassigned</span>'}</td>
+        <td><span class="day-pill ${dayClass}">${label}</span></td>
+        <td>${l.status}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ---- Stats + master render ---- */
+  function renderAll(){
+    const members = allTeamMembers();
+    const leads = getLeads();
+    const cities = new Set();
+    members.forEach(m => (m.city||'').split(',').forEach(c => c.trim() && cities.add(c.trim().toLowerCase())));
+    const today = todayISO();
+    const releasingToday = leads.filter(l => l.releaseDate === today).length;
+
+    document.getElementById('s-team').textContent = members.length;
+    document.getElementById('s-cities').textContent = cities.size;
+    document.getElementById('s-leads').textContent = leads.length;
+    document.getElementById('s-today').textContent = releasingToday;
+
+    renderTeamList();
+    if(document.getElementById('tab-queue').classList.contains('active')) renderQueue();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Portal — Softmaco</title>
+  <meta name="description"
+    content="Softmaco Internal Team Member Dashboard for Leads Management, Sales Performance, and Salary Tracking.">
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    main {
+      padding-top: 104px;
+      padding-bottom: 100px;
+    }
+
+    /* ── Login View ── */
+    .login-wrapper {
+      max-width: 520px;
+      margin: 20px auto 0;
+      text-align: center;
+    }
+
+    .login-card {
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(76, 124, 240, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .login-avatar-select {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 24px 0 28px;
+    }
+
+    .avatar-option {
+      background: var(--panel-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 16px 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      position: relative;
+    }
+
+    .avatar-option:hover,
+    .avatar-option.selected {
+      border-color: var(--azure);
+      background: var(--azure-soft);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(76, 124, 240, 0.2);
+    }
+
+    .avatar-option.selected::after {
+      content: "✓";
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 11px;
+      color: #fff;
+      background: var(--azure);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-option img {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 2px solid var(--azure);
+    }
+
+    .avatar-option .name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .avatar-option .role {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Dashboard Layout ── */
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 24px 28px;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .user-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--azure);
+      object-fit: cover;
+      box-shadow: 0 0 16px var(--azure-glow);
+    }
+
+    .user-info h2 {
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+
+    .user-info p {
+      font-size: 13.5px;
+      color: var(--azure);
+      font-weight: 500;
+    }
+
+    /* ── Metrics Grid ── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(200, 210, 235, 0.3);
+    }
+
+    .metric-card.accent-emerald {
+      border-top: 3px solid var(--emerald);
+    }
+
+    .metric-card.accent-brass {
+      border-top: 3px solid var(--brass);
+    }
+
+    .metric-card.accent-azure {
+      border-top: 3px solid var(--azure);
+    }
+
+    .metric-card.highlight-salary {
+      background: linear-gradient(135deg, rgba(46, 204, 142, 0.12), var(--panel-2));
+      border: 1px solid rgba(46, 204, 142, 0.4);
+      border-top: 3px solid var(--emerald);
+      box-shadow: 0 10px 30px rgba(46, 204, 142, 0.1);
+    }
+
+    .metric-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .metric-sub {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── Quota Box ── */
+    .quota-box {
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 18px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .progress-bar-wrap {
+      flex: 1;
+      min-width: 220px;
+      background: var(--ink);
+      height: 12px;
+      border-radius: 100px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--azure), var(--emerald));
+      width: 0%;
+      transition: width 0.6s ease;
+    }
+
+    /* ── Leads Management Panel ── */
+    .leads-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .leads-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .lead-row {
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin-bottom: 16px;
+      transition: all 0.25s ease;
+      display: grid;
+      grid-template-columns: 1.4fr 1.1fr 0.9fr 1fr;
+      grid-template-areas: "info service value status" "actions actions actions actions";
+      align-items: center;
+      gap: 14px 18px;
+    }
+
+    .lead-row .col-info { grid-area: info; }
+    .lead-row .col-service { grid-area: service; }
+    .lead-row .col-value { grid-area: value; }
+    .lead-row .col-status { grid-area: status; }
+
+    .lead-row .action-btns {
+      grid-area: actions;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .lead-row:hover {
+      border-color: var(--azure);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .client-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16.5px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .client-contact {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+
+    .status-new {
+      color: var(--azure);
+      background: var(--azure-soft);
+      border: 1px solid rgba(76, 124, 240, 0.3);
+    }
+
+    .status-visited {
+      color: var(--brass);
+      background: var(--brass-soft);
+      border: 1px solid rgba(201, 162, 75, 0.3);
+    }
+
+    .status-closed {
+      color: var(--emerald);
+      background: var(--emerald-soft);
+      border: 1px solid rgba(46, 204, 142, 0.3);
+    }
+
+    .status-interested {
+      color: #A78BFA;
+      background: rgba(167, 139, 250, 0.14);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+    }
+
+    .status-rejected {
+      color: var(--rose);
+      background: rgba(240, 76, 108, 0.14);
+      border: 1px solid rgba(240, 76, 108, 0.3);
+    }
+
+    .action-select {
+      padding: 9px 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--line-strong);
+      border-radius: 100px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .action-select:hover,
+    .action-select:focus {
+      border-color: var(--azure);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    @media (max-width: 1080px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .lead-row {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "info info" "service value" "status status" "actions actions";
+        gap: 12px 16px;
+      }
+
+      .lead-row .action-btns {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lead-row {
+        grid-template-columns: 1fr;
+        grid-template-areas: "info" "service" "value" "status" "actions";
+      }
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted-2);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body data-nav-mode="app-portal">
+  <main>
+    <div class="wrap">
+
+      <!-- ── VIEW 1: LOGIN VIEW ── -->
+      <div id="login-view" class="login-wrapper reveal">
+        <div class="section-head center" style="margin-bottom: 24px;">
+          <div class="eyebrow center">INTERNAL TEAM PORTAL</div>
+          <h1 style="font-size: 34px; margin-top: 10px;">Select Your Profile</h1>
+          <p style="font-size: 14.5px;">Sign in to manage inbound leads, update visit logs, and view your expected
+            monthly salary.</p>
+        </div>
+
+        <div class="login-card">
+          <div class="login-avatar-select" id="avatar-grid">
+            <!-- populated by JS -->
+          </div>
+          <p class="hint">Tap your name to open your dashboard.</p>
+        </div>
+      </div>
+
+      <!-- ── VIEW 2: DASHBOARD VIEW ── -->
+      <div id="dash-view" style="display: none;">
+
+        <!-- Top User Header -->
+        <div class="dash-header reveal">
+          <div class="user-profile">
+            <img src="" id="u-img" alt="User Avatar" class="user-avatar">
+            <div class="user-info">
+              <h2 id="u-name">Teammate</h2>
+              <p id="u-role">Role</p>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-azure btn-sm" onclick="openAddLeadModal()">+ Add New Lead</button>
+          </div>
+        </div>
+
+        <!-- 4 Key Metric Cards -->
+        <div class="metrics-grid reveal">
+          <div class="metric-card accent-azure">
+            <div class="metric-title">Total Closed Sales</div>
+            <div class="metric-value" id="m-sales">$0</div>
+            <div class="metric-sub" id="m-deals-count">0 deals won</div>
+          </div>
+
+          <div class="metric-card accent-brass">
+            <div class="metric-title">Monthly Base Salary</div>
+            <div class="metric-value" id="m-base-sal">$0</div>
+            <div class="metric-sub">Guaranteed Base Pay</div>
+          </div>
+
+          <div class="metric-card accent-emerald">
+            <div class="metric-title">Commission Earned</div>
+            <div class="metric-value" id="m-comm">$0</div>
+            <div class="metric-sub" id="m-comm-rate">8% Commission Rate</div>
+          </div>
+
+          <div class="metric-card highlight-salary">
+            <div class="metric-title" style="color: var(--emerald);">Expected Total Salary</div>
+            <div class="metric-value" style="color: var(--emerald);" id="m-total-sal">$0</div>
+            <div class="metric-sub" style="color: var(--text);">Base Salary + Commission</div>
+          </div>
+        </div>
+
+        <!-- Monthly Target Progress -->
+        <div class="quota-box reveal">
+          <div>
+            <div
+              style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2); text-transform:uppercase;">
+              Monthly Sales Quota</div>
+            <div style="font-size:15.5px; font-weight:600; color:var(--text); margin-top:2px;" id="quota-text">$0 /
+              $150,000 Target</div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="quota-fill"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--azure);"
+            id="quota-pct">0%</div>
+        </div>
+
+        <!-- Leads Management Panel -->
+        <div class="leads-header reveal">
+          <div>
+            <h2 style="font-size: 24px;">Inbound Client Leads &amp; Visits</h2>
+            <p style="font-size: 14px; color: var(--muted);">Track client inquiries, mark visits, and convert to closed
+              deals.</p>
+          </div>
+
+          <div class="leads-controls">
+            <div class="search-wrap">
+              <span class="search-icon">⌕</span>
+              <input id="lead-search" class="search-input" type="text" placeholder="Search leads…"
+                oninput="renderDashboardMetricsAndLeads()">
+            </div>
+
+            <div class="filter-pills" id="lead-filters">
+              <button class="filter-pill active" data-status="All">All Leads</button>
+              <button class="filter-pill" data-status="New">New</button>
+              <button class="filter-pill" data-status="Visited">Visited</button>
+              <button class="filter-pill" data-status="Interested">Interested</button>
+              <button class="filter-pill" data-status="Closed / Won">Closed / Won</button>
+              <button class="filter-pill" data-status="Rejected">Rejected</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="upcoming-banner" class="hint" style="display:none;margin:-10px 0 20px;padding:10px 16px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:var(--radius);"></div>
+
+        <!-- Leads List Container -->
+        <div id="leads-container" class="reveal">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Add Lead Modal -->
+  <div class="modal-overlay" id="add-lead-modal" onclick="if(event.target===this)closeAddLeadModal()">
+    <div class="modal-card" style="max-width:520px;">
+      <button class="modal-close" onclick="closeAddLeadModal()">✕</button>
+      <h3 style="font-size:22px; margin-bottom:18px;">Add New Lead to Panel</h3>
+      <form onsubmit="handleManualLead(event)">
+        <div class="form-group">
+          <label class="form-label">Client / Organization Name</label>
+          <input type="text" class="form-input" id="m-lead-name" placeholder="e.g. Apex Logistics Corp" required>
+        </div>
+        <div class="g2" style="gap:14px;">
+          <div class="form-group">
+            <label class="form-label">Work Email</label>
+            <input type="email" class="form-input" id="m-lead-email" placeholder="contact@apex.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input" id="m-lead-phone" placeholder="+1 (555) 019-2831">
+          </div>
+        </div>
+        <div class="g2" style="gap:14px;">
+          <div class="form-group">
+            <label class="form-label">Service Required</label>
+            <select class="form-select" id="m-lead-service">
+              <option>AI / Machine Learning</option>
+              <option>Custom Software Development</option>
+              <option>Mobile App Development</option>
+              <option>SaaS Product Engineering</option>
+              <option>Enterprise Licensing / Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Est. Deal Value ($)</label>
+            <input type="number" class="form-input" id="m-lead-val" value="45000" step="5000">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-azure btn-lg"
+          style="width:100%; justify-content:center; margin-top:10px;">Add Lead to Panel →</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/data.js"></script>
+  <script src="/js/shared.js"></script>
+  <script>
+    /* Default Initial Leads if localStorage is empty */
+    const DEFAULT_LEADS = [
+      {
+        id: 'lead_101',
+        name: 'Yuvansh Cargo Systems',
+        email: 'logistics@yuvanshcargo.com',
+        phone: '+1 (415) 980-2211',
+        service: 'Custom Software Development',
+        details: 'Needs real-time fleet dispatch software and route optimization AI.',
+        status: 'New',
+        value: 65000,
+        assignedTo: 'arjun-mehta',
+        date: 'Jul 28, 2026'
+      },
+      {
+        id: 'lead_102',
+        name: 'Medicare HealthTech',
+        email: 'ops@medicare.io',
+        phone: '+1 (312) 554-9021',
+        service: 'AI / Machine Learning',
+        details: 'HIPAA compliant patient triaging model and appointment assistant.',
+        status: 'Visited',
+        visitedAt: 'Jul 29, 2026',
+        value: 55000,
+        assignedTo: 'arjun-mehta',
+        date: 'Jul 26, 2026'
+      },
+      {
+        id: 'lead_103',
+        name: 'The Birdo SaaS',
+        email: 'founders@thebirdo.com',
+        phone: '+44 20 7946 0912',
+        service: 'Mobile App Development',
+        details: 'React Native iOS & Android social commerce app.',
+        status: 'Closed / Won',
+        visitedAt: 'Jul 25, 2026',
+        closedAt: 'Jul 27, 2026',
+        value: 45000,
+        assignedTo: 'arjun-mehta',
+        date: 'Jul 20, 2026'
+      },
+      {
+        id: 'lead_104',
+        name: 'Savor Hospitality Group',
+        email: 'ceo@savorhosp.com',
+        phone: '+1 (212) 678-9900',
+        service: 'RestroAI Enterprise License',
+        details: 'Multi-location RestroAI deployment across 18 restaurant sites.',
+        status: 'Closed / Won',
+        visitedAt: 'Jul 18, 2026',
+        closedAt: 'Jul 22, 2026',
+        value: 80000,
+        assignedTo: 'arjun-mehta',
+        date: 'Jul 15, 2026'
+      }
+    ];
+
+    /* Base salary configuration for team members */
+    const TEAM_SALARIES = {
+      'arjun-mehta': { base: 14500, commRate: 0.08, quotaTarget: 150000 },
+      'priya-kapoor': { base: 15500, commRate: 0.07, quotaTarget: 150000 },
+      'rohan-sharma': { base: 13500, commRate: 0.06, quotaTarget: 120000 },
+      'sofia-chen': { base: 12500, commRate: 0.05, quotaTarget: 100000 },
+      'marcus-lee': { base: 14000, commRate: 0.06, quotaTarget: 120000 },
+      'aisha-patel': { base: 13000, commRate: 0.08, quotaTarget: 160000 }
+    };
+
+    let selectedUser = null;
+    let activeLeadFilter = 'All';
+
+    /* Static demo team + any reps added in the Admin panel */
+    function allTeamMembers() {
+      const staticTeam = (typeof SOFTMACO_DATA !== 'undefined' && SOFTMACO_DATA.team) ? SOFTMACO_DATA.team.map(m => ({
+        id: m.id, name: m.name, role: m.role, department: m.department || '', city: m.city || '', photo: m.photo, isStatic: true
+      })) : [];
+      const added = JSON.parse(localStorage.getItem('softmaco_team_members') || '[]');
+      return [...staticTeam, ...added];
+    }
+
+    function initPortal() {
+      // Setup Login avatars
+      const members = allTeamMembers();
+      const grid = document.getElementById('avatar-grid');
+      grid.innerHTML = members.map(m => `
+        <div class="avatar-option" data-id="${m.id}" onclick="loginAs('${m.id}')">
+          <img src="${m.photo}" alt="${m.name}">
+          <div class="name">${m.name.split(' ')[0]}</div>
+          <div class="role">${m.role.split(' ')[0]}</div>
+        </div>
+      `).join('');
+
+      // Check existing session
+      const savedUserId = localStorage.getItem('softmaco_logged_user');
+      if (savedUserId) {
+        const u = members.find(x => x.id === savedUserId);
+        if (u) {
+          selectedUser = u;
+          showDashboard();
+          return;
+        }
+      }
+
+      // Check leads in localStorage
+      if (!localStorage.getItem('softmaco_leads')) {
+        localStorage.setItem('softmaco_leads', JSON.stringify(DEFAULT_LEADS));
+      }
+    }
+
+    function loginAs(id) {
+      const u = allTeamMembers().find(x => x.id === id);
+      if (!u) return;
+      selectedUser = u;
+      localStorage.setItem('softmaco_logged_user', u.id);
+      showDashboard();
+      showToast(`Welcome back, ${u.name}!`);
+    }
+
+    function logout() {
+      localStorage.removeItem('softmaco_logged_user');
+      window.SM_CURRENT_USER = null;
+      document.getElementById('dash-view').style.display = 'none';
+      document.getElementById('login-view').style.display = 'block';
+      showToast('Logged out of Team Portal.');
+      window.smRefreshNavAuth && window.smRefreshNavAuth();
+    }
+
+    function showDashboard() {
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('dash-view').style.display = 'block';
+      window.SM_CURRENT_USER = selectedUser;
+      window.smRefreshNavAuth && window.smRefreshNavAuth();
+
+      // Set user header
+      document.getElementById('u-img').src = selectedUser.photo;
+      document.getElementById('u-name').textContent = selectedUser.name;
+      document.getElementById('u-role').textContent = `${selectedUser.role} · ${selectedUser.department}`;
+
+      renderDashboardMetricsAndLeads();
+    }
+
+    function getLeads() {
+      return JSON.parse(localStorage.getItem('softmaco_leads') || JSON.stringify(DEFAULT_LEADS));
+    }
+
+    function saveLeads(leads) {
+      localStorage.setItem('softmaco_leads', JSON.stringify(leads));
+      renderDashboardMetricsAndLeads();
+    }
+
+    /* Local-calendar-date (avoids UTC-shift bugs from toISOString in +offset timezones like IST) */
+    function todayISO() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    /* Leads assigned to me that have actually been released (day has arrived) */
+    function getMyReleasedLeads() {
+      const today = todayISO();
+      return getLeads().filter(l => l.assignedTo === selectedUser.id && (!l.releaseDate || l.releaseDate <= today));
+    }
+
+    /* Leads assigned to me but queued for a future release day */
+    function getMyUpcomingLeads() {
+      const today = todayISO();
+      return getLeads().filter(l => l.assignedTo === selectedUser.id && l.releaseDate && l.releaseDate > today);
+    }
+
+    function renderDashboardMetricsAndLeads() {
+      const leads = getMyReleasedLeads();
+      const upcoming = getMyUpcomingLeads();
+      const upcomingBanner = document.getElementById('upcoming-banner');
+      if (upcomingBanner) {
+        if (upcoming.length) {
+          const nextDate = upcoming.map(l => l.releaseDate).sort()[0];
+          upcomingBanner.style.display = 'block';
+          upcomingBanner.textContent = `📦 ${upcoming.length} more lead${upcoming.length === 1 ? '' : 's'} queued — next batch releases ${nextDate}.`;
+        } else {
+          upcomingBanner.style.display = 'none';
+        }
+      }
+      const userSalConfig = TEAM_SALARIES[selectedUser.id] || { base: 12000, commRate: 0.08, quotaTarget: 150000 };
+
+      // Calculate Metrics for Closed Deals
+      const closedDeals = leads.filter(l => l.status === 'Closed / Won');
+      const totalSales = closedDeals.reduce((sum, l) => sum + (l.value || 0), 0);
+      const commission = Math.round(totalSales * userSalConfig.commRate);
+      const expectedTotalSalary = userSalConfig.base + commission;
+
+      // Update Metric UI
+      document.getElementById('m-sales').textContent = '$' + totalSales.toLocaleString();
+      document.getElementById('m-deals-count').textContent = `${closedDeals.length} deals won`;
+      document.getElementById('m-base-sal').textContent = '$' + userSalConfig.base.toLocaleString() + '/mo';
+      document.getElementById('m-comm').textContent = '$' + commission.toLocaleString();
+      document.getElementById('m-comm-rate').textContent = `${(userSalConfig.commRate * 100).toFixed(0)}% Commission Rate`;
+      document.getElementById('m-total-sal').textContent = '$' + expectedTotalSalary.toLocaleString() + '/mo';
+
+      // Quota Progress Bar
+      const pct = Math.min(100, Math.round((totalSales / userSalConfig.quotaTarget) * 100));
+      document.getElementById('quota-text').textContent = `$${totalSales.toLocaleString()} / $${userSalConfig.quotaTarget.toLocaleString()} Target`;
+      document.getElementById('quota-fill').style.width = pct + '%';
+      document.getElementById('quota-pct').textContent = pct + '%';
+
+      // Search Query
+      const query = (document.getElementById('lead-search')?.value || '').toLowerCase();
+
+      // Render Leads Panel List
+      const filteredLeads = leads.filter(l => {
+        const matchesStatus = activeLeadFilter === 'All' || l.status === activeLeadFilter;
+        const matchesSearch = !query || l.name.toLowerCase().includes(query) || (l.email && l.email.toLowerCase().includes(query)) || (l.service && l.service.toLowerCase().includes(query));
+        return matchesStatus && matchesSearch;
+      });
+
+      const container = document.getElementById('leads-container');
+
+      if (!filteredLeads.length) {
+        container.innerHTML = `
+          <div class="card" style="text-align:center; padding:48px 24px;">
+            <div style="font-size:2rem; margin-bottom:8px;">📥</div>
+            <h4 style="margin-bottom:4px;">No matching leads</h4>
+            <p style="color:var(--muted); font-size:13.5px;">No client inquiries currently match your filter criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredLeads.map(l => {
+        let badgeClass = 'status-new';
+        if (l.status === 'Visited') badgeClass = 'status-visited';
+        if (l.status === 'Interested') badgeClass = 'status-interested';
+        if (l.status === 'Closed / Won') badgeClass = 'status-closed';
+        if (l.status === 'Rejected') badgeClass = 'status-rejected';
+
+        return `
+          <div class="lead-row">
+            <div class="col-info">
+              <div class="client-name">${l.name}</div>
+              <div class="client-contact">📧 ${l.email || 'N/A'} ${l.phone ? '· 📞 ' + l.phone : ''}</div>
+            </div>
+
+            <div class="col-service">
+              <div style="font-size:14px; font-weight:600; color:var(--text);">${l.service}</div>
+              <div style="font-size:12.5px; color:var(--muted);">${l.details ? l.details.substring(0, 50) + '…' : 'No description'}</div>
+            </div>
+
+            <div class="col-value">
+              <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--azure); font-size:17px;">$${(l.value || 0).toLocaleString()}</div>
+              <div style="font-size:11px; color:var(--muted-2); font-family:'IBM Plex Mono',monospace;">Est. Value</div>
+            </div>
+
+            <div class="col-status">
+              <span class="status-badge ${badgeClass}">● ${l.status}</span>
+              <div style="font-size:11px; color:var(--muted-2); margin-top:4px; font-family:'IBM Plex Mono',monospace;">${l.date || 'Recent'}</div>
+            </div>
+
+            <div class="action-btns">
+              ${l.status === 'New' ? `
+                <button class="btn btn-ghost btn-sm" onclick="markVisited('${l.id}')">Mark Visited 📍</button>
+              ` : ''}
+
+              ${(l.status === 'Visited' || l.status === 'Interested') ? `
+                <select class="action-select" onchange="handleStatusChange('${l.id}', this.value)">
+                  <option value="" selected disabled>Update Status ▾</option>
+                  <option value="Closed / Won">🤝 Close Deal</option>
+                  ${l.status === 'Visited' ? `<option value="Interested">🙂 A Little Interested</option>` : ''}
+                  <option value="Rejected">✕ Reject</option>
+                </select>
+              ` : ''}
+
+              ${l.status === 'Closed / Won' ? `
+                <span style="font-size:12.5px; color:var(--emerald); font-weight:600; padding:6px 12px; background:var(--emerald-soft); border-radius:100px; border:1px solid rgba(46,204,142,0.3);">✓ Won &amp; Credited</span>
+              ` : ''}
+
+              ${l.status === 'Rejected' ? `
+                <span style="font-size:12.5px; color:var(--rose); font-weight:600; padding:6px 12px; background:rgba(240,76,108,0.14); border-radius:100px; border:1px solid rgba(240,76,108,0.3);">✕ Rejected</span>
+              ` : ''}
+
+              <button class="btn btn-ghost btn-sm" style="color:var(--muted-2); border:none; padding:4px 8px;" title="Delete Lead" onclick="deleteLead('${l.id}')">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function markVisited(id) {
+      const leads = getLeads();
+      const item = leads.find(x => x.id === id);
+      if (item) {
+        item.status = 'Visited';
+        item.visitedAt = new Date().toLocaleDateString();
+        saveLeads(leads);
+        showToast(`Marked ${item.name} as Visited 📍`);
+      }
+    }
+
+    function handleStatusChange(id, value) {
+      if (value === 'Closed / Won') markClosed(id);
+      else if (value === 'Interested') markInterested(id);
+      else if (value === 'Rejected') markRejected(id);
+    }
+
+    function markInterested(id) {
+      const leads = getLeads();
+      const item = leads.find(x => x.id === id);
+      if (item) {
+        item.status = 'Interested';
+        item.interestedAt = new Date().toLocaleDateString();
+        saveLeads(leads);
+        showToast(`Marked ${item.name} as a little interested 🙂`);
+      }
+    }
+
+    function markRejected(id) {
+      const leads = getLeads();
+      const item = leads.find(x => x.id === id);
+      if (item) {
+        item.status = 'Rejected';
+        item.rejectedAt = new Date().toLocaleDateString();
+        saveLeads(leads);
+        showToast(`Marked ${item.name} as Rejected.`);
+      }
+    }
+
+    function markClosed(id) {
+      const leads = getLeads();
+      const item = leads.find(x => x.id === id);
+      if (item) {
+        item.status = 'Closed / Won';
+        item.closedAt = new Date().toLocaleDateString();
+        saveLeads(leads);
+        showToast(`🎉 Deal Closed with ${item.name} for $${(item.value || 0).toLocaleString()}! Salary updated.`);
+      }
+    }
+
+    function deleteLead(id) {
+      if (!confirm('Are you sure you want to delete this lead?')) return;
+      const leads = getLeads().filter(x => x.id !== id);
+      saveLeads(leads);
+      showToast('Lead removed.');
+    }
+
+    /* Lead Filters */
+    document.getElementById('lead-filters').addEventListener('click', e => {
+      const btn = e.target.closest('.filter-pill');
+      if (!btn) return;
+      document.querySelectorAll('#lead-filters .filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeLeadFilter = btn.dataset.status;
+      renderDashboardMetricsAndLeads();
+    });
+
+    /* Manual Lead Modal */
+    function openAddLeadModal() {
+      document.getElementById('add-lead-modal').classList.add('active');
+    }
+    function closeAddLeadModal() {
+      document.getElementById('add-lead-modal').classList.remove('active');
+    }
+
+    function handleManualLead(e) {
+      e.preventDefault();
+      const name = document.getElementById('m-lead-name').value;
+      const email = document.getElementById('m-lead-email').value;
+      const phone = document.getElementById('m-lead-phone').value;
+      const service = document.getElementById('m-lead-service').value;
+      const val = parseInt(document.getElementById('m-lead-val').value) || 45000;
+
+      const leads = getLeads();
+      const newLead = {
+        id: 'lead_' + Date.now(),
+        name: name,
+        email: email,
+        phone: phone,
+        service: service,
+        details: 'Manually added lead via Team Portal.',
+        status: 'New',
+        value: val,
+        assignedTo: selectedUser ? selectedUser.id : 'arjun-mehta',
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+
+      leads.unshift(newLead);
+      saveLeads(leads);
+      closeAddLeadModal();
+      showToast(`Added lead: ${name}`);
+      e.target.reset();
+    }
+
+    initPortal();
+  </script>
+</body>
+
+</html>
