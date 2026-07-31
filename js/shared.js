@@ -9,7 +9,7 @@
   <header id="site-header">
     <nav>
       <a class="logo" href="/index.html">
-        <span class="mark"></span>Softmaco
+        <img src="/assets/softmaco_logo.png" alt="Softmaco" class="logo-img">
       </a>
 
       <ul class="nav-links" id="main-nav">
@@ -55,7 +55,7 @@
     <div class="wrap">
       <div class="footer-top">
         <div class="footer-brand">
-          <a class="logo" href="/index.html"><span class="mark"></span>Softmaco</a>
+          <a class="logo" href="/index.html"><img src="/assets/softmaco_logo.png" alt="Softmaco" class="logo-img"></a>
           <p>An AI-first software studio designing and building products for startups, enterprises — and ourselves.</p>
           <div class="footer-social" style="margin-top:20px;">
             <a href="https://linkedin.com/company/softmaco" target="_blank" rel="noopener">LinkedIn</a>

@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Softmaco — Software, engineered like it matters.</title>
-  <meta name="description" content="Softmaco is an AI-first software studio. Custom software, AI solutions, mobile apps, SaaS, and enterprise digital products.">
+  <meta name="description"
+    content="Softmaco is an AI-first software studio. Custom software, AI solutions, mobile apps, SaaS, and enterprise digital products.">
   <meta property="og:title" content="Softmaco — Software, engineered like it matters.">
-  <meta property="og:description" content="We design and build AI-powered products for startups and enterprises — then hold ourselves to the same bar building our own.">
+  <meta property="og:description"
+    content="We design and build AI-powered products for startups and enterprises — then hold ourselves to the same bar building our own.">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="/css/theme.css">
   <style>
     /* ── page-specific overrides ── */
-    main { padding-top: 0; }
+    main {
+      padding-top: 0;
+    }
 
     /* HERO */
     .hero {
@@ -19,6 +24,7 @@
       padding: 190px 0 120px;
       overflow: hidden;
     }
+
     .hero::before {
       content: "";
       position: absolute;
@@ -31,6 +37,7 @@
       -webkit-mask-image: radial-gradient(ellipse 80% 60% at 30% 20%, black 10%, transparent 75%);
       pointer-events: none;
     }
+
     .hero-grid {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -38,101 +45,482 @@
       align-items: center;
       position: relative;
     }
-    .hero h1 { font-size: clamp(38px, 5vw, 62px); margin: 20px 0 22px; max-width: 620px; }
+
+    .hero h1 {
+      font-size: clamp(38px, 5vw, 62px);
+      margin: 20px 0 22px;
+      max-width: 620px;
+    }
+
     .hero h1 .hl {
       background: linear-gradient(90deg, var(--azure), #8AB0FF);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
-    .hero p { color: var(--muted); font-size: 17.5px; max-width: 480px; margin-bottom: 36px; }
-    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
-    .hero-actions .btn { padding: 14px 24px; font-size: 15px; }
-    .hero-note { margin-top: 32px; display: flex; gap: 24px; color: var(--muted-2); font-size: 13px; flex-wrap: wrap; }
-    .hero-note span { display: flex; align-items: center; gap: 7px; }
-    .hero-note .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 17.5px;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-actions .btn {
+      padding: 14px 24px;
+      font-size: 15px;
+    }
+
+    .hero-note {
+      margin-top: 32px;
+      display: flex;
+      gap: 24px;
+      color: var(--muted-2);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    .hero-note span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .hero-note .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brass);
+      flex-shrink: 0;
+    }
 
     /* DIAGRAM */
-    .diagram-wrap { display: flex; align-items: center; justify-content: center; }
-    .diagram-frame { position: relative; width: 100%; max-width: 480px; aspect-ratio: 1/1; }
-    .diagram-frame svg { width: 100%; height: 100%; overflow: visible; }
-    .corner { position: absolute; width: 22px; height: 22px; border-color: var(--line-strong); }
-    .corner.tl { top:-10px; left:-10px; border-top:1px solid; border-left:1px solid; }
-    .corner.br { bottom:-10px; right:-10px; border-bottom:1px solid; border-right:1px solid; }
-    .node-path { stroke:var(--azure); stroke-width:1.4; fill:none; stroke-dasharray:340; stroke-dashoffset:340; animation:draw 1.6s ease forwards; }
-    .node-path.d1{animation-delay:.15s} .node-path.d2{animation-delay:.3s} .node-path.d3{animation-delay:.45s} .node-path.d4{animation-delay:.6s}
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    .node-dot { fill:var(--panel); stroke:var(--muted-2); stroke-width:1.2; }
-    .node-core { fill:var(--ink); stroke:var(--brass); stroke-width:1.6; animation:pulse-c 2.6s ease-in-out infinite; }
-    @keyframes pulse-c { 0%,100%{filter:drop-shadow(0 0 0 rgba(201,162,75,.4))} 50%{filter:drop-shadow(0 0 8px rgba(201,162,75,.55))} }
-    .node-label { font-family:'IBM Plex Mono',monospace; font-size:9.5px; fill:var(--muted); letter-spacing:.05em; }
-    .node-label.core { fill:var(--text); font-size:11px; font-weight:500; }
+    .diagram-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .diagram-frame {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 1/1;
+    }
+
+    .diagram-frame svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .corner {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: var(--line-strong);
+    }
+
+    .corner.tl {
+      top: -10px;
+      left: -10px;
+      border-top: 1px solid;
+      border-left: 1px solid;
+    }
+
+    .corner.br {
+      bottom: -10px;
+      right: -10px;
+      border-bottom: 1px solid;
+      border-right: 1px solid;
+    }
+
+    .node-path {
+      stroke: var(--azure);
+      stroke-width: 1.4;
+      fill: none;
+      stroke-dasharray: 340;
+      stroke-dashoffset: 340;
+      animation: draw 1.6s ease forwards;
+    }
+
+    .node-path.d1 {
+      animation-delay: .15s
+    }
+
+    .node-path.d2 {
+      animation-delay: .3s
+    }
+
+    .node-path.d3 {
+      animation-delay: .45s
+    }
+
+    .node-path.d4 {
+      animation-delay: .6s
+    }
+
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .node-dot {
+      fill: var(--panel);
+      stroke: var(--muted-2);
+      stroke-width: 1.2;
+    }
+
+    .node-core {
+      fill: var(--ink);
+      stroke: var(--brass);
+      stroke-width: 1.6;
+      animation: pulse-c 2.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse-c {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 0 rgba(201, 162, 75, .4))
+      }
+
+      50% {
+        filter: drop-shadow(0 0 8px rgba(201, 162, 75, .55))
+      }
+    }
+
+    .node-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      fill: var(--muted);
+      letter-spacing: .05em;
+    }
+
+    .node-label.core {
+      fill: var(--text);
+      font-size: 11px;
+      font-weight: 500;
+    }
 
     /* TRUSTED */
-    .trusted { padding: 56px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .trusted-label { color:var(--muted-2); font-size:12px; margin-bottom:28px; text-align:center; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.1em; }
-    .logo-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:28px; opacity:0.5; }
-    .logo-row span { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:var(--muted); }
+    .trusted {
+      padding: 56px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .trusted-label {
+      color: var(--muted-2);
+      font-size: 12px;
+      margin-bottom: 28px;
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    .logo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 28px;
+      opacity: 0.5;
+    }
+
+    .logo-row span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--muted);
+    }
 
     /* SERVICE CARD */
-    .svc-icon { width:38px; height:38px; border-radius:9px; background:var(--azure-soft); display:flex; align-items:center; justify-content:center; font-size:17px; margin-bottom:18px; }
-    .card-link { display:inline-flex; align-items:center; gap:6px; margin-top:18px; font-size:13.5px; color:var(--azure); font-weight:500; }
+    .svc-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: var(--azure-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      margin-bottom: 18px;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      font-size: 13.5px;
+      color: var(--azure);
+      font-weight: 500;
+    }
 
     /* PRODUCT CARD */
-    .prod-card { padding:0; overflow:hidden; cursor:pointer; }
-    .prod-top { padding:26px 26px 0; }
-    .prod-logo { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--azure),#2E4E9E); display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:14px; }
-    .prod-cat { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2); text-transform:uppercase; margin-bottom:6px; }
-    .prod-card h3 { font-size:19px; margin-bottom:10px; }
-    .prod-desc { font-size:14px; color:var(--muted); line-height:1.6; }
-    .prod-bottom { display:flex; justify-content:space-between; align-items:center; padding:18px 26px; margin-top:18px; border-top:1px solid var(--line); }
-    .prod-year { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted-2); }
-    .prod-link { font-size:13.5px; color:var(--azure); font-weight:500; }
+    .prod-card {
+      padding: 0;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .prod-top {
+      padding: 26px 26px 0;
+    }
+
+    .prod-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--azure), #2E4E9E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .prod-cat {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted-2);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .prod-card h3 {
+      font-size: 19px;
+      margin-bottom: 10px;
+    }
+
+    .prod-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .prod-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 26px;
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .prod-year {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted-2);
+    }
+
+    .prod-link {
+      font-size: 13.5px;
+      color: var(--azure);
+      font-weight: 500;
+    }
 
     /* PROCESS RAIL */
-    .process-rail { display:grid; grid-template-columns:repeat(6,1fr); gap:16px; position:relative; }
-    .process-rail::before { content:""; position:absolute; top:19px; left:0; right:0; height:1px; background:var(--line-strong); }
-    .process-step { position:relative; z-index:1; }
-    .process-num { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink); background:var(--muted); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:16px; transition:background .25s, color .25s; }
-    .process-step:hover .process-num { background:var(--azure); color:#fff; }
-    .process-step h4 { font-size:15px; margin-bottom:6px; }
-    .process-step p { font-size:13px; color:var(--muted); }
+    .process-rail {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+
+    .process-rail::before {
+      content: "";
+      position: absolute;
+      top: 19px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--line-strong);
+    }
+
+    .process-step {
+      position: relative;
+      z-index: 1;
+    }
+
+    .process-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--ink);
+      background: var(--muted);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      transition: background .25s, color .25s;
+    }
+
+    .process-step:hover .process-num {
+      background: var(--azure);
+      color: #fff;
+    }
+
+    .process-step h4 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .process-step p {
+      font-size: 13px;
+      color: var(--muted);
+    }
 
     /* WHY */
-    .why-layout { display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:start; }
-    .why-list { margin-top:20px; display:flex; flex-direction:column; gap:14px; }
-    .why-list li { display:flex; gap:12px; align-items:flex-start; font-size:14.5px; }
-    .why-list .tick { color:var(--azure); flex-shrink:0; margin-top:2px; }
+    .why-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .why-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .why-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14.5px;
+    }
+
+    .why-list .tick {
+      color: var(--azure);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
 
     /* TESTI */
-    .testi-card blockquote { font-size:15px; line-height:1.65; margin-bottom:20px; }
-    .testi-who { display:flex; align-items:center; gap:12px; }
-    .testi-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--brass),#7a5e1a); flex-shrink:0; }
-    .testi-name { font-size:13.5px; font-weight:600; }
-    .testi-role { font-size:12px; color:var(--muted-2); }
+    .testi-card blockquote {
+      font-size: 15px;
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .testi-who {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testi-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brass), #7a5e1a);
+      flex-shrink: 0;
+    }
+
+    .testi-name {
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .testi-role {
+      font-size: 12px;
+      color: var(--muted-2);
+    }
 
     /* FAQ */
-    .faq-item { border-bottom:1px solid var(--line); }
-    .faq-btn { width:100%; padding:20px 0; background:none; border:none; display:flex; align-items:center; justify-content:space-between; gap:16px; cursor:pointer; text-align:left; }
-    .faq-q { font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; color:var(--text); }
-    .faq-ic { color:var(--azure); font-size:20px; flex-shrink:0; transition:transform .25s; }
-    .faq-a { display:none; padding:0 0 20px; color:var(--muted); font-size:14.5px; line-height:1.75; }
+    .faq-item {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .faq-btn {
+      width: 100%;
+      padding: 20px 0;
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .faq-q {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .faq-ic {
+      color: var(--azure);
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: transform .25s;
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 0 20px;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.75;
+    }
 
     /* BLOG */
-    .blog-meta { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2); display:flex; gap:14px; margin-bottom:12px; }
+    .blog-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted-2);
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
 
     @media(max-width:980px) {
-      .hero-grid { grid-template-columns:1fr; }
-      .process-rail { grid-template-columns:repeat(3,1fr); }
-      .process-rail::before { display:none; }
-      .why-layout { grid-template-columns:1fr; }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .process-rail {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .process-rail::before {
+        display: none;
+      }
+
+      .why-layout {
+        grid-template-columns: 1fr;
+      }
     }
+
     @media(max-width:640px) {
-      .hero { padding:140px 0 80px; }
-      .process-rail { grid-template-columns:repeat(2,1fr); }
+      .hero {
+        padding: 140px 0 80px;
+      }
+
+      .process-rail {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
+
 <body>
   <!-- shared.js injects <header> here -->
 
@@ -143,7 +531,8 @@
         <div>
           <div class="eyebrow">SOFTMACO — AI-FIRST SOFTWARE STUDIO</div>
           <h1>Software,<br><span class="hl">engineered</span> like it matters.</h1>
-          <p>We design and build AI-powered software for startups and enterprises — then hold ourselves to the same bar building our own.</p>
+          <p>We design and build AI-powered software for startups and enterprises — then hold ourselves to the same bar
+            building our own.</p>
           <div class="hero-actions">
             <a href="/products.html" class="btn btn-primary">Explore products</a>
             <a href="/contact.html" class="btn btn-ghost">Start your project →</a>
@@ -160,19 +549,19 @@
             <div class="corner tl"></div>
             <div class="corner br"></div>
             <svg viewBox="0 0 400 400">
-              <path class="node-path d1" d="M200 200 L90 90"/>
-              <path class="node-path d2" d="M200 200 L320 90"/>
-              <path class="node-path d3" d="M200 200 L90 320"/>
-              <path class="node-path d4" d="M200 200 L320 320"/>
-              <circle class="node-dot" cx="90" cy="90" r="30"/>
+              <path class="node-path d1" d="M200 200 L90 90" />
+              <path class="node-path d2" d="M200 200 L320 90" />
+              <path class="node-path d3" d="M200 200 L90 320" />
+              <path class="node-path d4" d="M200 200 L320 320" />
+              <circle class="node-dot" cx="90" cy="90" r="30" />
               <text class="node-label" x="90" y="94" text-anchor="middle">AI</text>
-              <circle class="node-dot" cx="320" cy="90" r="30"/>
+              <circle class="node-dot" cx="320" cy="90" r="30" />
               <text class="node-label" x="320" y="94" text-anchor="middle">MOBILE</text>
-              <circle class="node-dot" cx="90" cy="320" r="30"/>
+              <circle class="node-dot" cx="90" cy="320" r="30" />
               <text class="node-label" x="90" y="324" text-anchor="middle">WEB</text>
-              <circle class="node-dot" cx="320" cy="320" r="30"/>
+              <circle class="node-dot" cx="320" cy="320" r="30" />
               <text class="node-label" x="320" y="324" text-anchor="middle">CLOUD</text>
-              <circle class="node-core" cx="200" cy="200" r="42"/>
+              <circle class="node-core" cx="200" cy="200" r="42" />
               <text class="node-label core" x="200" y="197" text-anchor="middle">SOFT-</text>
               <text class="node-label core" x="200" y="211" text-anchor="middle">MACO</text>
             </svg>
@@ -210,16 +599,23 @@
             <!-- Background SVG Orbit Ring and Radar Rays -->
             <svg class="orbit-ring-svg" viewBox="0 0 580 540" fill="none">
               <!-- Outer Orbit Ring -->
-              <circle cx="290" cy="270" r="200" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="6 6"/>
-              <circle class="orbit-pulse-ring" cx="290" cy="270" r="200" stroke="var(--azure)" stroke-width="1.2" stroke-opacity="0.3"/>
+              <circle cx="290" cy="270" r="200" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="6 6" />
+              <circle class="orbit-pulse-ring" cx="290" cy="270" r="200" stroke="var(--azure)" stroke-width="1.2"
+                stroke-opacity="0.3" />
 
               <!-- Connection Rays from Center to 6 Nodes -->
-              <line class="orbit-ray ray-mobile" x1="290" y1="270" x2="290" y2="70" stroke="var(--line)" stroke-width="1.2"/>
-              <line class="orbit-ray ray-ai" x1="290" y1="270" x2="463" y2="170" stroke="var(--line)" stroke-width="1.2"/>
-              <line class="orbit-ray ray-web" x1="290" y1="270" x2="463" y2="370" stroke="var(--line)" stroke-width="1.2"/>
-              <line class="orbit-ray ray-uiux" x1="290" y1="270" x2="290" y2="470" stroke="var(--line)" stroke-width="1.2"/>
-              <line class="orbit-ray ray-backend" x1="290" y1="270" x2="117" y2="370" stroke="var(--line)" stroke-width="1.2"/>
-              <line class="orbit-ray ray-cloud" x1="290" y1="270" x2="117" y2="170" stroke="var(--line)" stroke-width="1.2"/>
+              <line class="orbit-ray ray-mobile" x1="290" y1="270" x2="290" y2="70" stroke="var(--line)"
+                stroke-width="1.2" />
+              <line class="orbit-ray ray-ai" x1="290" y1="270" x2="463" y2="170" stroke="var(--line)"
+                stroke-width="1.2" />
+              <line class="orbit-ray ray-web" x1="290" y1="270" x2="463" y2="370" stroke="var(--line)"
+                stroke-width="1.2" />
+              <line class="orbit-ray ray-uiux" x1="290" y1="270" x2="290" y2="470" stroke="var(--line)"
+                stroke-width="1.2" />
+              <line class="orbit-ray ray-backend" x1="290" y1="270" x2="117" y2="370" stroke="var(--line)"
+                stroke-width="1.2" />
+              <line class="orbit-ray ray-cloud" x1="290" y1="270" x2="117" y2="170" stroke="var(--line)"
+                stroke-width="1.2" />
             </svg>
 
             <!-- Center Circle -->
@@ -231,7 +627,8 @@
 
             <!-- 6 Technology Orbit Nodes -->
             <!-- 1. Mobile (Top) -->
-            <div class="orbit-node node-mobile" data-svc="mobile" style="top:42px; left:50%; transform:translateX(-50%);">
+            <div class="orbit-node node-mobile" data-svc="mobile"
+              style="top:42px; left:50%; transform:translateX(-50%);">
               <div class="orbit-pill">
                 <span class="orbit-pill-icon">📱</span>
                 <span>Mobile</span>
@@ -255,7 +652,8 @@
             </div>
 
             <!-- 4. UI/UX (Bottom) -->
-            <div class="orbit-node node-uiux" data-svc="uiux" style="bottom:42px; left:50%; transform:translateX(-50%);">
+            <div class="orbit-node node-uiux" data-svc="uiux"
+              style="bottom:42px; left:50%; transform:translateX(-50%);">
               <div class="orbit-pill">
                 <span class="orbit-pill-icon">🎨</span>
                 <span>UI/UX</span>
@@ -283,10 +681,13 @@
           <div class="orbit-detail-banner reveal" id="orbit-detail">
             <div class="orbit-detail-icon" id="orbit-icon">🤖</div>
             <div class="orbit-detail-content">
-              <h3 id="orbit-title" style="font-size:18px;margin-bottom:4px;color:var(--text);">AI &amp; Machine Learning</h3>
-              <p id="orbit-desc" style="font-size:14px;color:var(--muted);margin:0;">Custom LLM integrations, RAG pipelines, fine-tuned models &amp; production MLOps.</p>
+              <h3 id="orbit-title" style="font-size:18px;margin-bottom:4px;color:var(--text);">AI &amp; Machine Learning
+              </h3>
+              <p id="orbit-desc" style="font-size:14px;color:var(--muted);margin:0;">Custom LLM integrations, RAG
+                pipelines, fine-tuned models &amp; production MLOps.</p>
             </div>
-            <a href="/contact.html" class="btn btn-azure btn-sm" style="margin-left:auto;flex-shrink:0;">Discuss AI Project →</a>
+            <a href="/contact.html" class="btn btn-azure btn-sm" style="margin-left:auto;flex-shrink:0;">Discuss AI
+              Project →</a>
           </div>
         </div>
       </div>
@@ -299,6 +700,7 @@
         flex-direction: column;
         align-items: center;
       }
+
       .orbit-container {
         position: relative;
         width: 100%;
@@ -306,6 +708,7 @@
         height: 540px;
         margin: 0 auto;
       }
+
       .orbit-ring-svg {
         position: absolute;
         inset: 0;
@@ -313,14 +716,26 @@
         height: 100%;
         pointer-events: none;
       }
+
       .orbit-pulse-ring {
         animation: ring-pulse 4s infinite ease-in-out;
         transform-origin: 290px 270px;
       }
+
       @keyframes ring-pulse {
-        0%, 100% { transform: scale(1); opacity: 0.25; }
-        50% { transform: scale(1.02); opacity: 0.55; }
+
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.25;
+        }
+
+        50% {
+          transform: scale(1.02);
+          opacity: 0.55;
+        }
       }
+
       .orbit-ray {
         transition: stroke 0.35s ease, stroke-width 0.35s ease;
       }
@@ -336,7 +751,7 @@
         border-radius: 50%;
         background: radial-gradient(circle at 30% 30%, var(--panel-2), var(--ink));
         border: 1px solid var(--line-strong);
-        box-shadow: 0 0 50px rgba(76,124,240,0.15), inset 0 0 25px rgba(76,124,240,0.08);
+        box-shadow: 0 0 50px rgba(76, 124, 240, 0.15), inset 0 0 25px rgba(76, 124, 240, 0.08);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -346,16 +761,28 @@
         z-index: 10;
         transition: all 0.35s ease;
       }
+
       .orbit-center-dot {
         color: var(--azure);
         font-size: 10px;
         margin-bottom: 6px;
         animation: pulse-dot 2s infinite ease-in-out;
       }
+
       @keyframes pulse-dot {
-        0%, 100% { opacity: 0.4; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.4); }
+
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+
+        50% {
+          opacity: 1;
+          transform: scale(1.4);
+        }
       }
+
       .orbit-center-title {
         font-family: 'Space Grotesk', sans-serif;
         font-size: 15px;
@@ -363,6 +790,7 @@
         color: var(--text);
         line-height: 1.3;
       }
+
       .orbit-center-sub {
         font-family: 'Space Grotesk', sans-serif;
         font-size: 14px;
@@ -378,6 +806,7 @@
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
+
       .orbit-pill {
         display: flex;
         align-items: center;
@@ -393,9 +822,10 @@
         font-size: 14.5px;
         font-weight: 600;
         white-space: nowrap;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         transition: all 0.35s ease;
       }
+
       .orbit-pill-icon {
         font-size: 19px;
         transition: transform 0.35s ease;
@@ -405,14 +835,16 @@
       .orbit-node:hover {
         z-index: 20;
       }
+
       .orbit-node:hover .orbit-pill,
       .orbit-node.active .orbit-pill {
         border-color: var(--azure);
         background: var(--panel-2);
-        box-shadow: 0 0 35px var(--azure-glow), 0 12px 36px rgba(0,0,0,0.5);
+        box-shadow: 0 0 35px var(--azure-glow), 0 12px 36px rgba(0, 0, 0, 0.5);
         transform: scale(1.18) translateY(-2px);
         color: #ffffff;
       }
+
       .orbit-node:hover .orbit-pill-icon,
       .orbit-node.active .orbit-pill-icon {
         transform: scale(1.3) rotate(10deg);
@@ -422,7 +854,7 @@
       .orbit-node[data-svc="ai"]:hover .orbit-pill,
       .orbit-node[data-svc="ai"].active .orbit-pill {
         border-color: var(--brass);
-        box-shadow: 0 0 45px rgba(201,162,75,0.45), 0 12px 36px rgba(0,0,0,0.5);
+        box-shadow: 0 0 45px rgba(201, 162, 75, 0.45), 0 12px 36px rgba(0, 0, 0, 0.5);
         transform: scale(1.24) rotate(-3deg);
       }
 
@@ -438,9 +870,10 @@
         background: var(--panel);
         border: 1px solid var(--line-strong);
         border-radius: var(--radius);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         transition: border-color 0.3s ease;
       }
+
       .orbit-detail-icon {
         width: 44px;
         height: 44px;
@@ -454,19 +887,45 @@
       }
 
       @media (max-width: 680px) {
-        .orbit-container { height: 480px; }
-        .orbit-center-core { width: 180px; height: 180px; padding: 16px; }
-        .orbit-center-title { font-size: 13.5px; }
-        .orbit-center-sub { font-size: 12.5px; }
-        .orbit-pill { padding: 8px 14px; font-size: 12.5px; }
-        .orbit-detail-banner { flex-direction: column; text-align: center; }
-        .orbit-detail-banner .btn { margin-left: 0 !important; width: 100%; justify-content: center; }
+        .orbit-container {
+          height: 480px;
+        }
+
+        .orbit-center-core {
+          width: 180px;
+          height: 180px;
+          padding: 16px;
+        }
+
+        .orbit-center-title {
+          font-size: 13.5px;
+        }
+
+        .orbit-center-sub {
+          font-size: 12.5px;
+        }
+
+        .orbit-pill {
+          padding: 8px 14px;
+          font-size: 12.5px;
+        }
+
+        .orbit-detail-banner {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .orbit-detail-banner .btn {
+          margin-left: 0 !important;
+          width: 100%;
+          justify-content: center;
+        }
       }
     </style>
 
     <!-- JavaScript for Orbit Hover Interactivity -->
     <script>
-      (function() {
+      (function () {
         const servicesData = {
           ai: {
             icon: '🤖',
@@ -617,8 +1076,10 @@
       <div class="wrap why-layout">
         <div class="reveal">
           <div class="eyebrow">WHY SOFTMACO</div>
-          <h2 style="font-size:clamp(26px,3vw,36px);margin-top:16px;">Small enough to care.<br>Disciplined enough to scale.</h2>
-          <p style="color:var(--muted);margin-top:14px;">We keep teams small and senior so nothing gets lost between intent and shipped code.</p>
+          <h2 style="font-size:clamp(26px,3vw,36px);margin-top:16px;">Small enough to care.<br>Disciplined enough to
+            scale.</h2>
+          <p style="color:var(--muted);margin-top:14px;">We keep teams small and senior so nothing gets lost between
+            intent and shipped code.</p>
           <ul class="why-list">
             <li><span class="tick">✓</span>One accountable team across design and engineering</li>
             <li><span class="tick">✓</span>AI built in where it earns its place — never bolted on</li>
@@ -628,46 +1089,27 @@
           </ul>
         </div>
         <div class="stat-grid reveal">
-          <div class="stat-cell"><div class="stat-num">5<span class="unit">+</span></div><div class="stat-label">Years building</div></div>
-          <div class="stat-cell"><div class="stat-num">140<span class="unit">+</span></div><div class="stat-label">Projects shipped</div></div>
-          <div class="stat-cell"><div class="stat-num">28<span class="unit">+</span></div><div class="stat-label">Countries served</div></div>
-          <div class="stat-cell"><div class="stat-num">98<span class="unit">%</span></div><div class="stat-label">Client satisfaction</div></div>
+          <div class="stat-cell">
+            <div class="stat-num">5<span class="unit">+</span></div>
+            <div class="stat-label">Years building</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">140<span class="unit">+</span></div>
+            <div class="stat-label">Projects shipped</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">28<span class="unit">+</span></div>
+            <div class="stat-label">Countries served</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">98<span class="unit">%</span></div>
+            <div class="stat-label">Client satisfaction</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ── TESTIMONIALS ── -->
-    <section>
-      <div class="wrap">
-        <div class="section-head reveal">
-          <div class="eyebrow">FROM PEOPLE WE'VE BUILT WITH</div>
-          <h2>What it's like to work with us.</h2>
-        </div>
-        <div class="g3">
-          <div class="card testi-card reveal">
-            <blockquote>"Softmaco didn't just build what we asked for — they challenged our assumptions and shipped something better than we imagined. RestroAI paid for itself in 6 weeks."</blockquote>
-            <div class="testi-who">
-              <div class="testi-avatar"></div>
-              <div><div class="testi-name">James Whitfield</div><div class="testi-role">CEO — Savor Hospitality Group</div></div>
-            </div>
-          </div>
-          <div class="card testi-card reveal">
-            <blockquote>"We've worked with 4 agencies before Softmaco. The difference is that their senior people are actually on your project — not juniors with seniors rubber-stamping."</blockquote>
-            <div class="testi-who">
-              <div class="testi-avatar"></div>
-              <div><div class="testi-name">Nadia Ostroff</div><div class="testi-role">CPO — Nova Digital Bank</div></div>
-            </div>
-          </div>
-          <div class="card testi-card reveal">
-            <blockquote>"The DataPulse AI integration halved the time our finance team spent on weekly reporting. Questions that took 3 days now take 30 seconds."</blockquote>
-            <div class="testi-who">
-              <div class="testi-avatar"></div>
-              <div><div class="testi-name">Raj Krishnamurthy</div><div class="testi-role">CFO — OmniTech Ventures</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+
 
     <!-- ── FAQ ── -->
     <section style="border-top:1px solid var(--line);">
@@ -721,8 +1163,8 @@
   <script>
     /* ── Product preview (first 3) ── */
     function badgeHtml(s) {
-      if (s==='Live') return '<span class="badge badge-live">Live</span>';
-      if (s==='Beta') return '<span class="badge badge-beta">Beta</span>';
+      if (s === 'Live') return '<span class="badge badge-live">Live</span>';
+      if (s === 'Beta') return '<span class="badge badge-beta">Beta</span>';
       return '<span class="badge badge-dev">' + s + '</span>';
     }
 
@@ -734,7 +1176,7 @@
           <div class="prod-logo" style="margin-top:14px;">${p.logo}</div>
           <div class="prod-cat">${p.category}</div>
           <h3>${p.name}</h3>
-          <p class="prod-desc">${p.description.substring(0,110)}…</p>
+          <p class="prod-desc">${p.description.substring(0, 110)}…</p>
         </div>
         <div class="prod-bottom">
           <span class="prod-year mono">${p.launchDate}</span>
@@ -764,4 +1206,5 @@
       </div>`).join('');
   </script>
 </body>
+
 </html>

@@ -75,9 +75,11 @@ section{position:relative;padding:100px 0}
 
 /* ── nav ── */
 header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,18,32,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:box-shadow .3s}
-nav{max-width:1200px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;display:flex;align-items:center;gap:9px;cursor:pointer}
-.logo .mark{width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,var(--azure),var(--brass));flex-shrink:0}
+nav{max-width:1200px;margin:0 auto;padding:8px 32px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:inline-flex;align-items:center;cursor:pointer}
+.logo-img{height:72px;width:auto;display:block;object-fit:contain;transition:transform .2s ease}
+.logo:hover .logo-img{transform:scale(1.03)}
+.footer-brand .logo-img{height:84px}
 .nav-links{display:flex;gap:34px}
 .nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
 .nav-links a:hover,.nav-links a.active{color:var(--text)}

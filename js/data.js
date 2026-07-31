@@ -362,11 +362,6 @@ const SOFTMACO_DATA = {
       photo: 'https://ui-avatars.com/api/?name=Arjun+Mehta&background=14203A&color=4C7CF0&size=160',
       skills: ['System Design', 'Go', 'Kubernetes', 'AI Strategy', 'Product Vision', 'Team Leadership'],
       productsContributed: ['RestroAI', 'InventoryPro', 'SoftCRM'],
-      experience: [
-        { role: 'Founder & CEO', company: 'Softmaco', period: '2019 – Present' },
-        { role: 'VP Engineering', company: 'FreightOS (YC W14)', period: '2015 – 2019' },
-        { role: 'Senior Engineer', company: 'Razorpay', period: '2012 – 2015' }
-      ],
       awards: ['Forbes 30 Under 30 Technology 2021', 'YC Alumni Engineering Excellence 2020'],
       social: { linkedin: 'https://linkedin.com', github: 'https://github.com', twitter: 'https://twitter.com', email: 'arjun@softmaco.com' }
     },
