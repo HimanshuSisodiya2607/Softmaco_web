@@ -6,66 +6,137 @@
 <title>Admin Dashboard — Softmaco</title>
 <link rel="stylesheet" href="/css/theme.css">
 <style>
-  main{padding-top:104px;padding-bottom:60px}
-  .admin-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:40px}
-  .nav-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:all .2s}
-  .nav-card:hover{border-color:var(--azure);transform:translateY(-2px);box-shadow:0 8px 20px rgba(76,124,240,.15)}
-  .nav-icon{font-size:32px;margin-bottom:12px}
-  .nav-label{font-size:16px;font-weight:600;color:var(--text)}
-  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
-  .stat-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);padding:20px;text-align:center}
-  .stat-num{font-size:28px;font-weight:700;color:var(--azure);margin-bottom:4px}
-  .stat-label{font-size:11px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em}
+  main{padding-top:104px;padding-bottom:80px}
+
+  .dashboard-hero{margin-bottom:48px;position:relative}
+  .hero-content{max-width:800px}
+  .hero-content h1{font-size:40px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.02em}
+  .hero-content p{font-size:16px;color:var(--muted);line-height:1.6}
+
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:48px}
+  .stat-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius-lg);padding:28px;position:relative;overflow:hidden;transition:all .3s ease}
+  .stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(76,124,240,.05),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+  .stat-card:hover{border-color:var(--azure);transform:translateY(-4px);box-shadow:0 12px 32px rgba(76,124,240,.15)}
+  .stat-card:hover::before{opacity:1}
+
+  .stat-icon{width:48px;height:48px;border-radius:12px;background:var(--azure-soft);display:grid;place-items:center;font-size:24px;margin-bottom:14px}
+  .stat-label{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;color:var(--muted-2);letter-spacing:.08em;margin-bottom:8px;font-weight:600}
+  .stat-value{font-size:36px;font-weight:700;color:var(--text);line-height:1}
+  .stat-sub{font-size:13px;color:var(--muted);margin-top:12px}
+
+  .section-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+  .section-title::before{content:'';width:4px;height:24px;background:var(--azure);border-radius:2px}
+
+  .actions-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:48px}
+  .action-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:all .3s ease;position:relative;overflow:hidden}
+  .action-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--azure-soft),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+  .action-card:hover{border-color:var(--azure);transform:translateY(-6px);box-shadow:0 16px 40px rgba(76,124,240,.2)}
+  .action-card:hover::before{opacity:1}
+  .action-card:active{transform:translateY(-2px)}
+
+  .action-icon{font-size:48px;margin-bottom:16px;display:block}
+  .action-label{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
+  .action-desc{font-size:13px;color:var(--muted);line-height:1.5}
+
+  .quick-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;background:var(--panel-2);border-radius:var(--radius-lg);padding:24px;border:1px solid var(--line-strong)}
+  .quick-stat{display:flex;align-items:baseline;gap:10px}
+  .quick-stat-label{font-size:13px;color:var(--muted-2)}
+  .quick-stat-value{font-size:24px;font-weight:700;color:var(--azure)}
+
+  @media(max-width:768px){
+    .hero-content h1{font-size:28px}
+    .stat-value{font-size:28px}
+    .stats-grid,.actions-grid{grid-template-columns:1fr}
+    .quick-stats{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body data-nav-mode="app-admin">
 <main>
   <div class="wrap">
-    <div class="reveal" style="margin-bottom:32px;">
-      <div class="eyebrow">ADMIN CONTROL</div>
-      <h1 style="font-size:32px;margin-top:8px;">Dashboard</h1>
+
+    <!-- Hero Section -->
+    <div class="dashboard-hero reveal">
+      <div class="hero-content">
+        <h1>Dashboard</h1>
+        <p>Manage your sales operations — add cities, build your team, and distribute leads</p>
+      </div>
     </div>
 
-    <div class="stat-strip reveal">
+    <!-- Key Metrics -->
+    <div class="stats-grid reveal">
       <div class="stat-card">
-        <div class="stat-num" id="s-team">0</div>
+        <div class="stat-icon">🏙️</div>
+        <div class="stat-label">Cities</div>
+        <div class="stat-value" id="s-cities">0</div>
+        <div class="stat-sub">Active locations</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
         <div class="stat-label">Team Members</div>
+        <div class="stat-value" id="s-team">0</div>
+        <div class="stat-sub">Sales representatives</div>
       </div>
+
       <div class="stat-card">
-        <div class="stat-num" id="s-cities">0</div>
-        <div class="stat-label">Cities Covered</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="s-leads">0</div>
+        <div class="stat-icon">📋</div>
         <div class="stat-label">Total Leads</div>
+        <div class="stat-value" id="s-leads">0</div>
+        <div class="stat-sub">In system</div>
       </div>
+
       <div class="stat-card">
-        <div class="stat-num" id="s-today">0</div>
+        <div class="stat-icon">📅</div>
         <div class="stat-label">Releasing Today</div>
+        <div class="stat-value" id="s-today">0</div>
+        <div class="stat-sub">Scheduled for today</div>
       </div>
     </div>
 
-    <div class="reveal">
-      <h2 style="font-size:20px;margin-bottom:20px;">Manage</h2>
-      <div class="admin-nav">
-        <div class="nav-card" onclick="window.location.href='/admin/cities.html'">
-          <div class="nav-icon">🏙️</div>
-          <div class="nav-label">Cities</div>
+    <!-- Quick Overview -->
+    <div class="quick-stats reveal">
+      <div class="quick-stat">
+        <span class="quick-stat-label">Status:</span>
+        <span class="quick-stat-value">Ready to Manage</span>
+      </div>
+      <div class="quick-stat">
+        <span class="quick-stat-label">Last Updated:</span>
+        <span class="quick-stat-value" id="last-update">Just now</span>
+      </div>
+    </div>
+
+    <!-- Action Cards -->
+    <div style="margin-top:48px;">
+      <div class="section-title reveal">Get Started</div>
+
+      <div class="actions-grid reveal">
+        <div class="action-card" onclick="window.location.href='/admin/cities.html'">
+          <span class="action-icon">🏙️</span>
+          <div class="action-label">Add Cities</div>
+          <div class="action-desc">Define operational locations</div>
         </div>
-        <div class="nav-card" onclick="window.location.href='/admin/team.html'">
-          <div class="nav-icon">👥</div>
-          <div class="nav-label">Team Members</div>
+
+        <div class="action-card" onclick="window.location.href='/admin/team.html'">
+          <span class="action-icon">👥</span>
+          <div class="action-label">Build Team</div>
+          <div class="action-desc">Add sales members & assign cities</div>
         </div>
-        <div class="nav-card" onclick="window.location.href='/admin/upload.html'">
-          <div class="nav-icon">📤</div>
-          <div class="nav-label">Upload Leads</div>
+
+        <div class="action-card" onclick="window.location.href='/admin/upload.html'">
+          <span class="action-icon">📤</span>
+          <div class="action-label">Upload Leads</div>
+          <div class="action-desc">Batch import & distribute</div>
         </div>
-        <div class="nav-card" onclick="window.location.href='/admin/queue.html'">
-          <div class="nav-icon">📅</div>
-          <div class="nav-label">Distribution Queue</div>
+
+        <div class="action-card" onclick="window.location.href='/admin/queue.html'">
+          <span class="action-icon">📅</span>
+          <div class="action-label">View Queue</div>
+          <div class="action-desc">Monitor distribution schedule</div>
         </div>
       </div>
     </div>
+
   </div>
 </main>
 
@@ -73,23 +144,28 @@
 <script src="/js/shared.js"></script>
 <script src="/admin/data.js"></script>
 <script>
-  if (!checkAdminAuth()) {};
+  if (!checkAdminAuth()) {}
 
   function updateStats() {
     const members = allTeamMembers();
     const leads = getLeads();
-    const cities = new Set();
-    members.forEach(m => (m.city || '').split(',').forEach(c => c.trim() && cities.add(c.trim().toLowerCase())));
+    const cities = getCities();
     const today = todayISO();
     const releasingToday = leads.filter(l => l.releaseDate === today).length;
 
     document.getElementById('s-team').textContent = members.length;
-    document.getElementById('s-cities').textContent = cities.size;
+    document.getElementById('s-cities').textContent = cities.length;
     document.getElementById('s-leads').textContent = leads.length;
     document.getElementById('s-today').textContent = releasingToday;
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('last-update').textContent = timeStr;
   }
 
   updateStats();
+  // Refresh every 10 seconds
+  setInterval(updateStats, 10000);
 </script>
 </body>
 </html>
