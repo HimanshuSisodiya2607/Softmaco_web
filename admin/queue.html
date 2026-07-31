@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distribution Queue — Softmaco</title>
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  main{padding-top:104px;padding-bottom:60px}
+  .queue-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+  .btn-danger{background:none;border:1px solid rgba(240,76,108,.3);color:var(--rose);padding:8px 16px;border-radius:100px;cursor:pointer;font-size:13px;transition:all .2s}
+  .btn-danger:hover{background:rgba(240,76,108,.1);border-color:var(--rose)}
+  .queue-table{width:100%;border-collapse:collapse;font-size:13.5px;overflow-x:auto}
+  .queue-table th{text-align:left;padding:10px 14px;color:var(--muted-2);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--line-strong)}
+  .queue-table td{padding:12px 14px;border-bottom:1px solid var(--line)}
+  .queue-table tr:hover td{background:var(--panel-2)}
+  .city-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 10px;border-radius:100px;background:var(--brass-soft);color:var(--brass);border:1px solid rgba(201,162,75,.3)}
+  .day-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 10px;border-radius:100px;background:var(--azure-soft);color:var(--azure)}
+  .day-pill.today{background:var(--emerald-soft);color:var(--emerald)}
+  .day-pill.future{background:rgba(200,210,235,.08);color:var(--muted)}
+  .back-link{display:inline-block;margin-bottom:24px;color:var(--azure);text-decoration:none;font-size:14px}
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<main>
+  <div class="wrap">
+    <a href="/admin/dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div class="queue-header reveal">
+      <div>
+        <h1 style="font-size:28px;">Distribution Queue</h1>
+        <p style="color:var(--muted);font-size:14px;margin-top:4px;">All scheduled leads</p>
+      </div>
+      <button class="btn-danger" onclick="clearAllLeads()">Clear All</button>
+    </div>
+
+    <div class="card reveal" style="padding:8px 4px;overflow-x:auto;">
+      <table class="queue-table">
+        <thead>
+          <tr>
+            <th>Lead</th>
+            <th>City</th>
+            <th>Assigned To</th>
+            <th>Release Day</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="queue-body">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script src="/admin/data.js"></script>
+<script>
+  if (!checkAdminAuth()) {}
+
+  function renderQueue() {
+    const leads = getLeads().filter(l => l.city);
+    const members = allTeamMembers();
+    const today = todayISO();
+    const tbody = document.getElementById('queue-body');
+    if (!leads.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px;">No distributed leads yet.</td></tr>`; return; }
+
+    const sorted = [...leads].sort((a, b) => (a.releaseDate || '').localeCompare(b.releaseDate || ''));
+    tbody.innerHTML = sorted.map(l => {
+      const person = members.find(m => m.id === l.assignedTo);
+      const dayClass = !l.releaseDate ? '' : (l.releaseDate < today ? 'today' : (l.releaseDate === today ? 'today' : 'future'));
+      const label = !l.releaseDate ? '—' : (l.releaseDate <= today ? `Released · ${l.releaseDate}` : `Day ${l.batchDay} · ${l.releaseDate}`);
+      return `<tr>
+        <td>${l.name}${l.phone ? '<br><span style="color:var(--muted);font-size:12px;">'+l.phone+'</span>' : ''}</td>
+        <td><span class="city-tag">${l.city}</span></td>
+        <td>${person ? person.name : '<span style="color:var(--rose);">Unassigned</span>'}</td>
+        <td><span class="day-pill ${dayClass}">${label}</span></td>
+        <td>${l.status}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function clearAllLeads() {
+    if (!confirm('Delete ALL leads? This cannot be undone.')) return;
+    localStorage.removeItem('softmaco_leads');
+    renderQueue();
+    showToast('All leads cleared.');
+  }
+
+  renderQueue();
+</script>
+</body>
+</html>

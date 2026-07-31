@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Leads — Softmaco</title>
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  main{padding-top:104px;padding-bottom:60px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .form-group{margin-bottom:18px}
+  .form-label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+  .form-input{width:100%;padding:12px 14px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'Inter',sans-serif}
+  .form-input:focus{border-color:var(--azure);outline:none}
+  textarea.form-input{min-height:140px;font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+  .btn-primary{width:100%;padding:12px;background:var(--azure);color:white;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;margin-top:12px}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(76,124,240,.3)}
+  .hint{font-size:12px;color:var(--muted-2);margin-top:6px}
+  .back-link{display:inline-block;margin-bottom:24px;color:var(--azure);text-decoration:none;font-size:14px}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<main>
+  <div class="wrap">
+    <a href="/admin/dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div class="reveal" style="margin-bottom:32px;">
+      <h1 style="font-size:28px;">Upload & Distribute Leads</h1>
+      <p style="color:var(--muted);font-size:14px;margin-top:8px;">Paste leads or upload a CSV file</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:6px;">Paste / Upload Leads</h3>
+        <p class="hint">Format: Name, Phone, City (email optional)</p>
+
+        <div class="form-group">
+          <label class="form-label">Leads (CSV)</label>
+          <textarea class="form-input" id="bulk-leads" placeholder="John Doe, 9876543210, Bikaner&#10;Jane Smith, 9876543211, Jodhpur"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Or upload .csv file</label>
+          <input type="file" class="form-input" id="csv-file" accept=".csv,text/csv" onchange="handleCsvFile(event)">
+        </div>
+
+        <div class="g2">
+          <div class="form-group">
+            <label class="form-label">Leads per person / day</label>
+            <input type="number" class="form-input" id="batch-size" value="10" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start releasing from</label>
+            <input type="date" class="form-input" id="start-date">
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="distributeLeads()">Distribute Leads →</button>
+        <p class="hint" id="upload-preview"></p>
+      </div>
+
+      <div class="card" style="background:var(--panel-2);">
+        <h3 style="font-size:16px;margin-bottom:12px;">How it works</h3>
+        <ol style="font-size:13.5px;color:var(--muted);line-height:1.8;padding-left:20px;">
+          <li>Each lead's <strong>City</strong> is matched to an assigned team member</li>
+          <li>Leads are split into daily batches (e.g. 100 leads at 10/day = 10 days)</li>
+          <li>Each batch gets a release date</li>
+          <li>Team members only see released leads in their portal</li>
+          <li>Add team members first in <strong>Team & Cities</strong></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script src="/admin/data.js"></script>
+<script>
+  if (!checkAdminAuth()) {}
+
+  document.getElementById('start-date').value = todayISO();
+
+  function handleCsvFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { document.getElementById('bulk-leads').value = ev.target.result.trim(); };
+    reader.readAsText(file);
+  }
+
+  function distributeLeads() {
+    const raw = document.getElementById('bulk-leads').value.trim();
+    if (!raw) { showToast('Paste or upload leads first.'); return; }
+    const batchSize = parseInt(document.getElementById('batch-size').value) || 10;
+    const startDate = document.getElementById('start-date').value || todayISO();
+
+    const rows = raw.split('\n').map(r => r.trim()).filter(Boolean);
+    const parsed = rows.map(r => {
+      const parts = r.split(',').map(x => x.trim());
+      return { name: parts[0] || 'Unnamed', phone: parts[1] || '', city: parts[2] || 'Unassigned', email: parts[3] || '' };
+    });
+
+    const byCity = {};
+    parsed.forEach(p => { (byCity[p.city] = byCity[p.city] || []).push(p); });
+
+    const leads = getLeads();
+    let unassignedCount = 0, createdCount = 0;
+
+    Object.keys(byCity).forEach(city => {
+      const cityLeads = byCity[city];
+      const assignee = findAssigneeForCity(city);
+      cityLeads.forEach((lead, idx) => {
+        const dayIndex = Math.floor(idx / batchSize);
+        const releaseDate = addDays(startDate, dayIndex);
+        if (!assignee) unassignedCount++;
+        leads.push({
+          id: 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          name: lead.name,
+          phone: lead.phone,
+          email: lead.email,
+          city: city,
+          service: 'General Inquiry',
+          details: `Bulk-uploaded lead for ${city}.`,
+          status: 'New',
+          value: 0,
+          assignedTo: assignee ? assignee.id : null,
+          releaseDate: releaseDate,
+          batchDay: dayIndex + 1,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        });
+        createdCount++;
+      });
+    });
+
+    saveLeads(leads);
+    document.getElementById('bulk-leads').value = '';
+    document.getElementById('upload-preview').innerHTML =
+      `✅ Distributed ${createdCount} leads across ${Object.keys(byCity).length} cities.` +
+      (unassignedCount ? ` ⚠️ ${unassignedCount} leads have no city assignee.` : '');
+    showToast(`Distributed ${createdCount} leads.`);
+  }
+</script>
+</body>
+</html>

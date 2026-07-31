@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Management — Softmaco</title>
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  main{padding-top:104px;padding-bottom:60px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .team-card{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px}
+  .team-card .who{display:flex;align-items:center;gap:14px}
+  .team-card img{width:44px;height:44px;border-radius:50%;border:2px solid var(--azure)}
+  .team-card .name{font-weight:600;font-size:15px}
+  .team-card .meta{font-size:12px;color:var(--muted);margin-top:2px}
+  .city-pill{display:inline-block;padding:6px 12px;background:var(--brass-soft);color:var(--brass);border-radius:100px;font-size:12px;margin:2px;border:1px solid rgba(201,162,75,.3)}
+  .form-group{margin-bottom:18px}
+  .form-label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+  .form-input,.form-select{width:100%;padding:12px 14px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'Inter',sans-serif}
+  .form-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238B93A7' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+  .form-input:focus,.form-select:focus{border-color:var(--azure);outline:none}
+  .btn-primary{width:100%;padding:12px;background:var(--azure);color:white;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:transform .2s}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(76,124,240,.3)}
+  .btn-remove{padding:4px 8px;font-size:12px;background:none;border:none;color:var(--muted-2);cursor:pointer}
+  .btn-remove:hover{color:var(--rose)}
+  .back-link{display:inline-block;margin-bottom:24px;color:var(--azure);text-decoration:none;font-size:14px}
+  .warning-box{background:rgba(240,76,108,.1);border:1px solid rgba(240,76,108,.3);color:var(--rose);padding:12px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:18px}
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<main>
+  <div class="wrap">
+    <a href="/admin/dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div class="reveal" style="margin-bottom:32px;">
+      <h1 style="font-size:28px;">Team Members</h1>
+      <p style="color:var(--muted);font-size:14px;margin-top:8px;">Add sales representatives and assign cities</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:18px;">Add Member</h3>
+        <div id="warning" style="display:none;" class="warning-box">Add cities first in the Cities tab</div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="tm-name" placeholder="e.g. Rahul Verma">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <input type="text" class="form-input" id="tm-role" placeholder="e.g. Sales Executive">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assign City</label>
+          <select class="form-select" id="tm-city">
+            <option value="">— Select a city —</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" onclick="addTeamMember()">+ Add Member</button>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:18px;">Team Roster</h3>
+        <div id="team-list"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script src="/admin/data.js"></script>
+<script>
+  if (!checkAdminAuth()) {}
+
+  function addTeamMember() {
+    const name = document.getElementById('tm-name').value.trim();
+    const role = document.getElementById('tm-role').value.trim() || 'Sales Executive';
+    const city = document.getElementById('tm-city').value.trim();
+    if (!name || !city) { showToast('Name and city are required.'); return; }
+    const list = getTeam();
+    const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4);
+    list.push({
+      id, name, role, city,
+      photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=14203A&color=4C7CF0&size=160`
+    });
+    saveTeam(list);
+    document.getElementById('tm-name').value = '';
+    document.getElementById('tm-role').value = '';
+    document.getElementById('tm-city').value = '';
+    renderTeam();
+    showToast(`Added ${name}.`);
+  }
+
+  function removeTeamMember(id) {
+    if (!confirm('Remove this member?')) return;
+    const list = getTeam().filter(m => m.id !== id);
+    saveTeam(list);
+    renderTeam();
+  }
+
+  function populateCityDropdown() {
+    const cities = getCities();
+    const sel = document.getElementById('tm-city');
+    sel.innerHTML = '<option value="">— Select a city —</option>' +
+      cities.map(c => `<option value="${c}">${c}</option>`).join('');
+
+    if (cities.length === 0) {
+      document.getElementById('warning').style.display = 'block';
+    } else {
+      document.getElementById('warning').style.display = 'none';
+    }
+  }
+
+  function renderTeam() {
+    const members = allTeamMembers();
+    const el = document.getElementById('team-list');
+    if (!members.length) {
+      el.innerHTML = '<div style="color:var(--muted-2);font-size:13px;padding:16px;text-align:center;background:var(--panel-2);border-radius:var(--radius);border:1px dashed var(--line-strong);">No team members yet.</div>';
+      return;
+    }
+    el.innerHTML = members.map(m => `
+      <div class="team-card">
+        <div class="who">
+          <img src="${m.photo}" alt="${m.name}">
+          <div>
+            <div class="name">${m.name}${m.isStatic ? ' <span style="color:var(--muted-2);font-size:11px;">(default)</span>' : ''}</div>
+            <div class="meta">${m.role}</div>
+            <div style="margin-top:6px;">
+              ${m.city ? m.city.split(',').map(c => `<span class="city-pill">${c.trim()}</span>`).join('') : '<span style="color:var(--muted-2);font-size:12px;">No city</span>'}
+            </div>
+          </div>
+        </div>
+        ${!m.isStatic ? `<button class="btn-remove" onclick="removeTeamMember('${m.id}')">🗑️</button>` : ''}
+      </div>
+    `).join('');
+  }
+
+  populateCityDropdown();
+  renderTeam();
+</script>
+</body>
+</html>

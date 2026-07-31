@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cities — Softmaco</title>
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  main{padding-top:104px;padding-bottom:60px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .form-group{margin-bottom:18px}
+  .form-label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+  .form-input{width:100%;padding:12px 14px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--text);font-size:14px}
+  .form-input:focus{border-color:var(--azure);outline:none}
+  .btn-primary{width:100%;padding:12px;background:var(--azure);color:white;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:transform .2s}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(76,124,240,.3)}
+  .city-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;background:var(--brass-soft);border:1px solid rgba(201,162,75,.3);border-radius:100px;margin:6px 6px 6px 0;font-size:14px;color:var(--brass)}
+  .city-badge .btn-remove{background:none;border:none;color:var(--brass);cursor:pointer;font-size:16px;padding:0;transition:opacity .2s}
+  .city-badge .btn-remove:hover{opacity:.7}
+  .back-link{display:inline-block;margin-bottom:24px;color:var(--azure);text-decoration:none;font-size:14px}
+  .city-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .empty-state{color:var(--muted-2);font-size:13px;padding:20px;text-align:center;background:var(--panel-2);border-radius:var(--radius);border:1px dashed var(--line-strong)}
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<main>
+  <div class="wrap">
+    <a href="/admin/dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div class="reveal" style="margin-bottom:32px;">
+      <h1 style="font-size:28px;">Cities</h1>
+      <p style="color:var(--muted);font-size:14px;margin-top:8px;">Add cities where your sales team operates</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:18px;">Add New City</h3>
+        <div class="form-group">
+          <label class="form-label">City Name</label>
+          <input type="text" class="form-input" id="city-name" placeholder="e.g. Bikaner, Mumbai, Delhi">
+        </div>
+        <button class="btn-primary" onclick="addCity()">+ Add City</button>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:18px;">Active Cities</h3>
+        <div id="cities-list" class="city-list">
+          <div class="empty-state">No cities yet. Add one to get started.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script src="/admin/data.js"></script>
+<script>
+  if (!checkAdminAuth()) {}
+
+  function addCity() {
+    const name = document.getElementById('city-name').value.trim();
+    if (!name) { showToast('City name required.'); return; }
+    const cities = getCities();
+    if (cities.includes(name)) { showToast('City already exists.'); return; }
+    cities.push(name);
+    saveCities(cities);
+    document.getElementById('city-name').value = '';
+    renderCities();
+    showToast(`Added ${name}.`);
+  }
+
+  function removeCity(name) {
+    if (!confirm(`Remove ${name}?`)) return;
+    const cities = getCities().filter(c => c !== name);
+    saveCities(cities);
+    renderCities();
+    showToast('City removed.');
+  }
+
+  function renderCities() {
+    const cities = getCities();
+    const el = document.getElementById('cities-list');
+    if (!cities.length) {
+      el.innerHTML = '<div class="empty-state">No cities yet. Add one to get started.</div>';
+      return;
+    }
+    el.innerHTML = cities.map(c => `
+      <div class="city-badge">
+        ${c}
+        <button class="btn-remove" onclick="removeCity('${c}')">&times;</button>
+      </div>
+    `).join('');
+  }
+
+  renderCities();
+</script>
+</body>
+</html>

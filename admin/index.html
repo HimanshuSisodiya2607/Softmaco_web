@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Softmaco</title>
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  body{display:grid;place-items:center;min-height:100vh;padding:20px}
+  .login-box{max-width:420px;width:100%;text-align:center}
+  .login-box h1{font-size:28px;margin:20px 0 10px}
+  .login-box p{color:var(--muted);margin-bottom:32px;font-size:14px}
+  .card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius-lg);padding:32px}
+  .form-group{text-align:left;margin-bottom:18px}
+  .form-label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+  .form-input{width:100%;padding:12px 14px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--text);font-size:14px;outline:none}
+  .form-input:focus{border-color:var(--azure)}
+  .btn-login{width:100%;padding:12px;background:var(--azure);color:white;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;margin-top:12px;transition:transform .2s,box-shadow .2s}
+  .btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(76,124,240,.3)}
+  .hint{font-size:12px;color:var(--muted-2);margin-top:14px}
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<div class="login-box">
+  <div class="login-box reveal" style="text-align:center;margin-bottom:40px;">
+    <a href="/index.html" style="display:inline-flex;align-items:center;text-decoration:none;">
+      <img src="/assets/softmaco_logo.png" alt="Softmaco" style="height:50px;width:auto;">
+    </a>
+  </div>
+  <div class="reveal">
+    <h1>Admin Panel</h1>
+    <p>Sales & Lead Management</p>
+  </div>
+  <div class="card reveal">
+    <div class="form-group">
+      <label class="form-label">Admin Passcode</label>
+      <input type="password" class="form-input" id="admin-pass" placeholder="Enter passcode">
+    </div>
+    <button class="btn-login" onclick="adminLogin()">Enter →</button>
+    <p class="hint">Demo passcode: <strong>admin123</strong></p>
+    <p class="hint"><a href="/index.html" style="color:var(--azure);text-decoration:none;">← Back to Softmaco</a></p>
+  </div>
+</div>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script src="/admin/data.js"></script>
+<script>
+  function adminLogin() {
+    const val = document.getElementById('admin-pass').value;
+    if (val === 'admin123') {
+      sessionStorage.setItem('softmaco_admin', '1');
+      window.location.href = '/admin/dashboard.html';
+    } else {
+      showToast('Incorrect passcode.');
+    }
+  }
+  if (sessionStorage.getItem('softmaco_admin') === '1') {
+    window.location.href = '/admin/dashboard.html';
+  }
+</script>
+</body>
+</html>

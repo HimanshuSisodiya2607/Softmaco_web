@@ -140,7 +140,7 @@
         <div class="footer-bottom">
           <span>© <span id="sm-year"></span> Softmaco Inc. All rights reserved.</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted-2);">AI-first · San Francisco &amp; Gurugram</span>
-          <a href="/admin.html" style="color:var(--muted-2);font-size:12px;">Staff Admin →</a>
+          <a href="/admin/index.html" style="color:var(--muted-2);font-size:12px;">Staff Admin →</a>
         </div>
       </div>
     </footer>`);

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Softmaco</title>
+<link rel="stylesheet" href="/css/theme.css">
+<style>
+  main{padding-top:104px;padding-bottom:60px}
+  .admin-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:40px}
+  .nav-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:all .2s}
+  .nav-card:hover{border-color:var(--azure);transform:translateY(-2px);box-shadow:0 8px 20px rgba(76,124,240,.15)}
+  .nav-icon{font-size:32px;margin-bottom:12px}
+  .nav-label{font-size:16px;font-weight:600;color:var(--text)}
+  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+  .stat-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);padding:20px;text-align:center}
+  .stat-num{font-size:28px;font-weight:700;color:var(--azure);margin-bottom:4px}
+  .stat-label{font-size:11px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em}
+</style>
+</head>
+<body data-nav-mode="app-admin">
+<main>
+  <div class="wrap">
+    <div class="reveal" style="margin-bottom:32px;">
+      <div class="eyebrow">ADMIN CONTROL</div>
+      <h1 style="font-size:32px;margin-top:8px;">Dashboard</h1>
+    </div>
+
+    <div class="stat-strip reveal">
+      <div class="stat-card">
+        <div class="stat-num" id="s-team">0</div>
+        <div class="stat-label">Team Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-cities">0</div>
+        <div class="stat-label">Cities Covered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-leads">0</div>
+        <div class="stat-label">Total Leads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-today">0</div>
+        <div class="stat-label">Releasing Today</div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <h2 style="font-size:20px;margin-bottom:20px;">Manage</h2>
+      <div class="admin-nav">
+        <div class="nav-card" onclick="window.location.href='/admin/cities.html'">
+          <div class="nav-icon">🏙️</div>
+          <div class="nav-label">Cities</div>
+        </div>
+        <div class="nav-card" onclick="window.location.href='/admin/team.html'">
+          <div class="nav-icon">👥</div>
+          <div class="nav-label">Team Members</div>
+        </div>
+        <div class="nav-card" onclick="window.location.href='/admin/upload.html'">
+          <div class="nav-icon">📤</div>
+          <div class="nav-label">Upload Leads</div>
+        </div>
+        <div class="nav-card" onclick="window.location.href='/admin/queue.html'">
+          <div class="nav-icon">📅</div>
+          <div class="nav-label">Distribution Queue</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/data.js"></script>
+<script src="/js/shared.js"></script>
+<script src="/admin/data.js"></script>
+<script>
+  if (!checkAdminAuth()) {};
+
+  function updateStats() {
+    const members = allTeamMembers();
+    const leads = getLeads();
+    const cities = new Set();
+    members.forEach(m => (m.city || '').split(',').forEach(c => c.trim() && cities.add(c.trim().toLowerCase())));
+    const today = todayISO();
+    const releasingToday = leads.filter(l => l.releaseDate === today).length;
+
+    document.getElementById('s-team').textContent = members.length;
+    document.getElementById('s-cities').textContent = cities.size;
+    document.getElementById('s-leads').textContent = leads.length;
+    document.getElementById('s-today').textContent = releasingToday;
+  }
+
+  updateStats();
+</script>
+</body>
+</html>

@@ -32,7 +32,12 @@
       "Bash(pkill -f \"remote-debugging-port=9337\")",
       "Bash(node cdpm.js after)",
       "Bash(lsof -ti:9338 -sTCP:LISTEN)",
-      "Bash(pkill -f \"remote-debugging-port=9338\")"
+      "Bash(pkill -f \"remote-debugging-port=9338\")",
+      "Bash(lsof -ti:9339 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9339\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);try{new Function\\(fs.readFileSync\\('admin/data.js','utf8'\\)\\);console.log\\('admin/data.js OK'\\);}catch\\(e\\){console.log\\('ERR:',e.message\\);}\")",
+      "Bash(lsof -ti:9340 -sTCP:LISTEN)",
+      "Bash(pkill -f \"remote-debugging-port=9340\")"
     ]
   }
 }
